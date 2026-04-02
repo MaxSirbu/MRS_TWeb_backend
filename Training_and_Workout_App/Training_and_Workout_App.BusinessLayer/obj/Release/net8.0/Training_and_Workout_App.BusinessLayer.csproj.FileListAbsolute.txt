@@ -1,0 +1,15 @@
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\bin\Release\net8.0\Training_and_Workout_App.BusinessLayer.deps.json
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\bin\Release\net8.0\Training_and_Workout_App.BusinessLayer.dll
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\bin\Release\net8.0\Training_and_Workout_App.BusinessLayer.pdb
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\bin\Release\net8.0\Training_and_Workout_App.Domain.dll
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\bin\Release\net8.0\Training_and_Workout_App.Domain.pdb
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\Training_and_Workout_App.BusinessLayer.csproj.AssemblyReference.cache
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\Training_and_Workout_App.BusinessLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\Training_and_Workout_App.BusinessLayer.AssemblyInfoInputs.cache
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\Training_and_Workout_App.BusinessLayer.AssemblyInfo.cs
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\Training_and_Workout_App.BusinessLayer.csproj.CoreCompileInputs.cache
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\Training.EA505E7D.Up2Date
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\Training_and_Workout_App.BusinessLayer.dll
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\refint\Training_and_Workout_App.BusinessLayer.dll
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\Training_and_Workout_App.BusinessLayer.pdb
+C:\Local Disk (D;)\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Release\net8.0\ref\Training_and_Workout_App.BusinessLayer.dll

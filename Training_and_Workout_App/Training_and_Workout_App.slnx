@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Training_and_Workout_App.API/Training_and_Workout_App.API.csproj" />
+  <Project Path="Training_and_Workout_App.BusinessLayer/Training_and_Workout_App.BusinessLayer.csproj" />
+  <Project Path="Training_and_Workout_App.DataAccess/Training_and_Workout_App.DataAccess.csproj" />
+  <Project Path="Training_and_Workout_App.Domain/Training_and_Workout_App.Domain.csproj" />
+</Solution>

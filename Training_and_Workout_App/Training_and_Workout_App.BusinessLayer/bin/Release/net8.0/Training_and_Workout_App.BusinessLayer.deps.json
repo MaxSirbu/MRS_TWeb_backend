@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Training_and_Workout_App.BusinessLayer/1.0.0": {
+        "dependencies": {
+          "Training_and_Workout_App.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Training_and_Workout_App.BusinessLayer.dll": {}
+        }
+      },
+      "Training_and_Workout_App.Domain/1.0.0": {
+        "runtime": {
+          "Training_and_Workout_App.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Training_and_Workout_App.BusinessLayer/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Training_and_Workout_App.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
