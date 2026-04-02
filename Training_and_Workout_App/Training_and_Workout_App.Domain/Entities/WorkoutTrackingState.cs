@@ -5,7 +5,7 @@ namespace Training_and_Workout_App.Domain.Entities;
 public class WorkoutTrackingState
 {
     [Key]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     // one-to-one with PauseTime
     public PauseTime PauseTime { get; set; } = null!;
@@ -14,6 +14,6 @@ public class WorkoutTrackingState
     public ICollection<WorkoutSet> Sets { get; set; } = [];
 
     // FK -> WorkoutPlan (one-to-one)
-    public Guid WorkoutPlanId { get; set; }
+    public int WorkoutPlanId { get; set; }
     public WorkoutPlan WorkoutPlan { get; set; } = null!;
 }

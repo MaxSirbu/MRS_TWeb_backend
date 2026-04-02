@@ -5,7 +5,7 @@ namespace Training_and_Workout_App.Domain.Models;
 public class QuestionnaireEntryCreateDto
 {
     [Required]
-    public Guid QuestionId { get; set; }
+    public int QuestionId { get; set; }
 
     [Required]
     public bool Skipped { get; set; }

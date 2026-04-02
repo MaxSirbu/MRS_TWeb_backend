@@ -5,7 +5,7 @@ namespace Training_and_Workout_App.Domain.Entities;
 public class WorkoutSet
 {
     [Key]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [Range(0.0, 1000.0)]
@@ -16,6 +16,6 @@ public class WorkoutSet
     public int Reps { get; set; }
 
     // FK -> WorkoutTrackingState
-    public Guid WorkoutTrackingStateId { get; set; }
+    public int WorkoutTrackingStateId { get; set; }
     public WorkoutTrackingState WorkoutTrackingState { get; set; } = null!;
 }

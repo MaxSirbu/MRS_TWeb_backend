@@ -15,7 +15,8 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "Exercises",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     MuscleGroup = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     GifUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -30,7 +31,8 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "Questions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Subtitle = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Options = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -44,7 +46,8 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
                 },
@@ -57,11 +60,12 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "MealPlans",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Meals = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,12 +82,13 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "QuestionnaireEntries",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Skipped = table.Column<bool>(type: "bit", nullable: false),
                     Answers = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    QuestionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -106,11 +111,12 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "WorkoutPlans",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,9 +133,10 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "DayPlans",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Label = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    WorkoutPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    WorkoutPlanId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,8 +153,9 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "WorkoutTrackingStates",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WorkoutPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WorkoutPlanId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -164,8 +172,8 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "DayPlanExercises",
                 columns: table => new
                 {
-                    DayPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExerciseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DayPlanId = table.Column<int>(type: "int", nullable: false),
+                    ExerciseId = table.Column<int>(type: "int", nullable: false),
                     Order = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
@@ -189,10 +197,11 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "PauseTimes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Minutes = table.Column<int>(type: "int", nullable: false),
                     Seconds = table.Column<int>(type: "int", nullable: false),
-                    WorkoutTrackingStateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    WorkoutTrackingStateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -209,10 +218,11 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                 name: "WorkoutSets",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Weight = table.Column<double>(type: "float", nullable: false),
                     Reps = table.Column<int>(type: "int", nullable: false),
-                    WorkoutTrackingStateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    WorkoutTrackingStateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

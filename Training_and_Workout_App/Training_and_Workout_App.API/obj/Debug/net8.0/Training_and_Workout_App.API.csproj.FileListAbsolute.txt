@@ -304,3 +304,4 @@ C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_Ap
 C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.API\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.API\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.API\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.API\obj\Debug\net8.0\Training_and_Workout_App.API.sourcelink.json

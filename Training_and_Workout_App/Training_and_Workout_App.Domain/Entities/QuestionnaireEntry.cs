@@ -5,7 +5,7 @@ namespace Training_and_Workout_App.Domain.Entities;
 public class QuestionnaireEntry
 {
     [Key]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     [Required]
     public bool Skipped { get; set; }
@@ -16,10 +16,10 @@ public class QuestionnaireEntry
     public DateTime CompletedAt { get; set; }
 
     // FK -> User
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     public User User { get; set; } = null!;
 
     // FK -> Question
-    public Guid QuestionId { get; set; }
+    public int QuestionId { get; set; }
     public Question Question { get; set; } = null!;
 }

@@ -31,3 +31,4 @@ C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_Ap
 C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.Domain\obj\Debug\net8.0\refint\Training_and_Workout_App.Domain.dll
 C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.Domain\obj\Debug\net8.0\Training_and_Workout_App.Domain.pdb
 C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.Domain\obj\Debug\net8.0\ref\Training_and_Workout_App.Domain.dll
+C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.Domain\obj\Debug\net8.0\Training_and_Workout_App.Domain.sourcelink.json

@@ -5,7 +5,7 @@ namespace Training_and_Workout_App.Domain.Entities;
 public class WorkoutPlan
 {
     [Key]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [StringLength(100, MinimumLength = 1)]
@@ -18,7 +18,7 @@ public class WorkoutPlan
     public DateTime UpdatedAt { get; set; }
 
     // FK -> User
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     public User User { get; set; } = null!;
 
     // one-to-many with DayPlan

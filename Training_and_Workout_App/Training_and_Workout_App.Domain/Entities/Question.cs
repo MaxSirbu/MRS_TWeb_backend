@@ -5,7 +5,7 @@ namespace Training_and_Workout_App.Domain.Entities;
 public class Question
 {
     [Key]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [StringLength(300, MinimumLength = 1)]
