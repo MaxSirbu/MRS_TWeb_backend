@@ -44,3 +44,5 @@ C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_Ap
 C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Debug\net8.0\Training_and_Workout_App.BusinessLayer.pdb
 C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Debug\net8.0\ref\Training_and_Workout_App.BusinessLayer.dll
 C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\obj\Debug\net8.0\Training_and_Workout_App.BusinessLayer.sourcelink.json
+C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\bin\Debug\net8.0\Training_and_Workout_App.DataAccess.dll
+C:\Local Disk D\Lectii\Anul 2\semestrul 2\project11\back\Training_and_Workout_App\Training_and_Workout_App.BusinessLayer\bin\Debug\net8.0\Training_and_Workout_App.DataAccess.pdb

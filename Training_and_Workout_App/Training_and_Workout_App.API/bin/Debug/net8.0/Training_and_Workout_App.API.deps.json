@@ -764,6 +764,7 @@
       },
       "Training_and_Workout_App.BusinessLayer/1.0.0": {
         "dependencies": {
+          "Training_and_Workout_App.DataAccess": "1.0.0",
           "Training_and_Workout_App.Domain": "1.0.0"
         },
         "runtime": {

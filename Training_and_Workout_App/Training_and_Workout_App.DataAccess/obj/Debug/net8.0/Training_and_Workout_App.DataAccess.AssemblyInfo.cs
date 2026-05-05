@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Training_and_Workout_App.DataAccess")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4f8f4e65acd20c74917f6b5d005f8bccf083cd73")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1178b4637d6eeea478811faa92db0ab9669fa33d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Training_and_Workout_App.DataAccess")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Training_and_Workout_App.DataAccess")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
