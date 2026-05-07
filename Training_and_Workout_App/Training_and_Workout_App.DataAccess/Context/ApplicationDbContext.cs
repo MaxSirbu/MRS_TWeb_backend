@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
 using Training_and_Workout_App.Domain.Entities;
@@ -18,6 +18,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<MealPlan> MealPlans => Set<MealPlan>();
     public DbSet<Question> Questions => Set<Question>();
     public DbSet<QuestionnaireEntry> QuestionnaireEntries => Set<QuestionnaireEntry>();
+    public DbSet<FoodItem> FoodItems => Set<FoodItem>();
+    public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
+    public DbSet<PlanActivation> PlanActivations => Set<PlanActivation>();
+    public DbSet<PlanCompletion> PlanCompletions => Set<PlanCompletion>();
+    public DbSet<PlanCustomization> PlanCustomizations => Set<PlanCustomization>();
+    public DbSet<UserPlanFavorite> UserPlanFavorites => Set<UserPlanFavorite>();
+    public DbSet<MealDayEntry> MealDayEntries => Set<MealDayEntry>();
+    public DbSet<MealDayEntryFoodItem> MealDayEntryFoodItems => Set<MealDayEntryFoodItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,6 +37,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasKey(u => u.Id);
             entity.Property(u => u.FullName).IsRequired().HasMaxLength(100);
             entity.Property(u => u.Password).IsRequired().HasMaxLength(256);
+            entity.Property(u => u.Username).IsRequired().HasMaxLength(256);
+            entity.HasIndex(u => u.Username).IsUnique();
+            entity.Property(u => u.Role).HasConversion<string>().HasMaxLength(20);
         });
 
         // ── Exercise ─────────────────────────────────────────────────────────
@@ -180,6 +191,114 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .WithMany(q => q.QuestionnaireEntries)
                   .HasForeignKey(qe => qe.QuestionId)
                   .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ── FoodItem ─────────────────────────────────────────────────────────
+        modelBuilder.Entity<FoodItem>(entity =>
+        {
+            entity.HasKey(f => f.Id);
+            entity.Property(f => f.Name).IsRequired().HasMaxLength(150);
+            entity.Property(f => f.Category).IsRequired().HasMaxLength(100);
+            entity.Property(f => f.ImageUrl).HasMaxLength(500);
+            entity.Property(f => f.Description).HasMaxLength(2000);
+            entity.Property(f => f.ItemType).HasConversion<string>().HasMaxLength(20);
+        });
+
+        // ── UserProfile ──────────────────────────────────────────────────────
+        modelBuilder.Entity<UserProfile>(entity =>
+        {
+            entity.HasKey(up => up.Id);
+
+            entity.HasOne(up => up.User)
+                  .WithOne(u => u.UserProfile)
+                  .HasForeignKey<UserProfile>(up => up.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ── PlanActivation ───────────────────────────────────────────────────
+        modelBuilder.Entity<PlanActivation>(entity =>
+        {
+            entity.HasKey(pa => pa.Id);
+            entity.Property(pa => pa.PlanIdentifier).IsRequired().HasMaxLength(100);
+            entity.Property(pa => pa.PlanType).HasConversion<string>().HasMaxLength(20);
+
+            entity.HasOne(pa => pa.User)
+                  .WithMany(u => u.PlanActivations)
+                  .HasForeignKey(pa => pa.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ── PlanCompletion ───────────────────────────────────────────────────
+        modelBuilder.Entity<PlanCompletion>(entity =>
+        {
+            entity.HasKey(pc => pc.Id);
+            entity.Property(pc => pc.DayToken).IsRequired().HasMaxLength(200);
+            entity.Property(pc => pc.PlanType).HasConversion<string>().HasMaxLength(20);
+
+            entity.HasOne(pc => pc.User)
+                  .WithMany(u => u.PlanCompletions)
+                  .HasForeignKey(pc => pc.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ── PlanCustomization ────────────────────────────────────────────────
+        modelBuilder.Entity<PlanCustomization>(entity =>
+        {
+            entity.HasKey(pc => pc.Id);
+            entity.Property(pc => pc.PlanIdentifier).IsRequired().HasMaxLength(100);
+            entity.Property(pc => pc.ColorId).HasMaxLength(50);
+            entity.Property(pc => pc.ImageUrl).HasMaxLength(500);
+            entity.Property(pc => pc.PlanType).HasConversion<string>().HasMaxLength(20);
+
+            entity.HasOne(pc => pc.User)
+                  .WithMany(u => u.PlanCustomizations)
+                  .HasForeignKey(pc => pc.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ── UserPlanFavorite ─────────────────────────────────────────────────
+        modelBuilder.Entity<UserPlanFavorite>(entity =>
+        {
+            entity.HasKey(f => f.Id);
+            entity.Property(f => f.PlanIdentifier).IsRequired().HasMaxLength(100);
+            entity.Property(f => f.PlanType).HasConversion<string>().HasMaxLength(20);
+
+            entity.HasOne(f => f.User)
+                  .WithMany(u => u.PlanFavorites)
+                  .HasForeignKey(f => f.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ── MealDayEntry ─────────────────────────────────────────────────────
+        modelBuilder.Entity<MealDayEntry>(entity =>
+        {
+            entity.HasKey(m => m.Id);
+            entity.Property(m => m.MealPlanIdentifier).IsRequired().HasMaxLength(100);
+            entity.Property(m => m.DayId).IsRequired().HasMaxLength(20);
+            entity.Property(m => m.MealSlot).HasConversion<string>().HasMaxLength(20);
+
+            entity.HasOne(m => m.User)
+                  .WithMany(u => u.MealDayEntries)
+                  .HasForeignKey(m => m.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ── MealDayEntryFoodItem (junction) ──────────────────────────────────
+        modelBuilder.Entity<MealDayEntryFoodItem>(entity =>
+        {
+            entity.HasKey(mf => new { mf.MealDayEntryId, mf.FoodItemId });
+
+            entity.HasOne(mf => mf.MealDayEntry)
+                  .WithMany(m => m.MealDayEntryFoodItems)
+                  .HasForeignKey(mf => mf.MealDayEntryId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(mf => mf.FoodItem)
+                  .WithMany()
+                  .HasForeignKey(mf => mf.FoodItemId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(mf => mf.Order).HasDefaultValue(0);
         });
     }
 }
