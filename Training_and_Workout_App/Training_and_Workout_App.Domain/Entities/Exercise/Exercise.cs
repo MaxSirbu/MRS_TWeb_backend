@@ -22,6 +22,11 @@ public class Exercise
     [StringLength(2000, MinimumLength = 1)]
     public string Instructions { get; set; } = string.Empty;
 
+    // Vizibilitate - folosit in panoul admin (AdminExercises.tsx)
+    public bool Recommended { get; set; }
+
+    public bool Hidden { get; set; }
+
     // many-to-many with DayPlan
     public ICollection<DayPlanExercise> DayPlanExercises { get; set; } = [];
 }
