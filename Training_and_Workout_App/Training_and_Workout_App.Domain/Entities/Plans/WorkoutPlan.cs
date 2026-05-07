@@ -24,6 +24,6 @@ public class WorkoutPlan
     // one-to-many with DayPlan
     public ICollection<DayPlan> Days { get; set; } = [];
 
-    // one-to-one with WorkoutTrackingState
-    public WorkoutTrackingState WorkoutTracking { get; set; } = null!;
+    // one-to-one with WorkoutTrackingState (nullable: planul poate exista fara tracking)
+    public WorkoutTrackingState? WorkoutTracking { get; set; }
 }
