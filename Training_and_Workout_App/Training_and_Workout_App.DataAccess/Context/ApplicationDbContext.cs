@@ -78,6 +78,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         {
             entity.HasKey(dp => dp.Id);
             entity.Property(dp => dp.Label).IsRequired().HasMaxLength(50);
+            entity.Property(dp => dp.DayNumber).IsRequired();
 
             // DayPlan -> WorkoutPlan (many-to-one)
             entity.HasOne(dp => dp.WorkoutPlan)
@@ -138,6 +139,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         {
             entity.HasKey(mp => mp.Id);
             entity.Property(mp => mp.Name).IsRequired().HasMaxLength(100);
+            entity.Property(mp => mp.Description).HasMaxLength(500);
+            entity.Property(mp => mp.ImageUrl).HasMaxLength(500);
             entity.Property(mp => mp.UpdatedAt).IsRequired();
 
             entity.HasOne(mp => mp.User)
