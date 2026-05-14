@@ -1,4 +1,4 @@
-﻿using Training_and_Workout_App.BusinessLayer.Interfaces;
+using Training_and_Workout_App.BusinessLayer.Interfaces;
 using Training_and_Workout_App.DataAccess.Context;
 using Training_and_Workout_App.Domain.Models;
 using Training_and_Workout_App.Domain.Entities;
@@ -14,18 +14,19 @@ public class UserActions(ApplicationDbContext context, ITokenActions tokenAction
         var user = new User
         {
             FullName = dto.FullName,
+            Username = dto.Username,
             Password = dto.Password
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        return new UserResponseDto { Id = user.Id, FullName = user.FullName };
+        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
     }
 
     public async Task<AuthResponseDto> LoginAsync(UserLoginDto dto)
     {
         var user = await context.Users
-            .FirstOrDefaultAsync(u => u.FullName == dto.FullName && u.Password == dto.Password);
+            .FirstOrDefaultAsync(u => u.Username == dto.Username && u.Password == dto.Password);
 
         if (user is null) throw new Exception("Invalid credentials");
 
@@ -48,7 +49,7 @@ public class UserActions(ApplicationDbContext context, ITokenActions tokenAction
         var user = await context.Users.FindAsync(id);
         if (user is null) return null;
 
-        return new UserResponseDto { Id = user.Id, FullName = user.FullName };
+        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
     }
 }
 
