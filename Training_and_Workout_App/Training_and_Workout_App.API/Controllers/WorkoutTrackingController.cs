@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Training_and_Workout_App.BusinessLayer.Interfaces;
 using Training_and_Workout_App.Domain.Models;
 
 namespace Training_and_Workout_App.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/workouttracking")]
+[Authorize]
 public class WorkoutTrackingController(IWorkoutTrackingActions workoutTrackingActions) : ControllerBase
 {
     // GET api/workouttracking/5
