@@ -34,14 +34,14 @@ public class UserActions(ApplicationDbContext context, ITokenActions tokenAction
             .FirstOrDefaultAsync(u => u.Username == dto.Username);
 
         if (user is null)
-            throw new Exception("Invalid credentials");
+            throw new UnauthorizedAccessException("Invalid credentials");
 
         // Verifica parola fata de hash-ul stocat in DB
         var verification = _hasher.VerifyHashedPassword(user, user.Password, dto.Password);
         if (verification == PasswordVerificationResult.Failed)
-            throw new Exception("Invalid credentials");
+            throw new UnauthorizedAccessException("Invalid credentials");
 
-        var expireMinutes = int.Parse(configuration["Jwt:ExpireMinutes"]!);
+        var expireMinutes = int.Parse(configuration["Jwt:ExpireMinutes"] ?? "60");
         var token = tokenActions.GenerateToken(user.Id, user.FullName, user.Role.ToString());
 
         return new AuthResponseDto

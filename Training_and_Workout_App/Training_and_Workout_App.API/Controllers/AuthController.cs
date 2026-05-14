@@ -17,15 +17,37 @@ public class AuthController(IUserActions userActions) : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto dto)
     {
-        var result = await userActions.RegisterAsync(dto);
-        return Ok(result);
+        try
+        {
+            var result = await userActions.RegisterAsync(dto);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     // POST /api/auth/login — returneaza AuthResponseDto cu token JWT
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
     {
-        var result = await userActions.LoginAsync(dto);
-        return Ok(result);
+        try
+        {
+            var result = await userActions.LoginAsync(dto);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized(new { message = "Invalid email or password." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = ex.Message });
+        }
     }
 }
