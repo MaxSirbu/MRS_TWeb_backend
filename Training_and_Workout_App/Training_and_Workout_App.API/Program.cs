@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -74,20 +74,20 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDataAccess(builder.Configuration);
 
 // ─── BusinessLayer — inregistrare servicii ────────────────────────────────
-builder.Services.AddScoped<ITokenService, TokenService>();   // JWT generation
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IExerciseService, ExerciseService>();
-builder.Services.AddScoped<IWorkoutPlanService, WorkoutPlanService>();
-builder.Services.AddScoped<IMealPlanService, MealPlanService>();
-builder.Services.AddScoped<IFoodItemService, FoodItemService>();
-builder.Services.AddScoped<IMealDayEntryService, MealDayEntryService>();
-builder.Services.AddScoped<IPlanActivationService, PlanActivationService>();
-builder.Services.AddScoped<IPlanCompletionService, PlanCompletionService>();
-builder.Services.AddScoped<IPlanCustomizationService, PlanCustomizationService>();
-builder.Services.AddScoped<IUserPlanFavoriteService, UserPlanFavoriteService>();
-builder.Services.AddScoped<IUserProfileService, UserProfileService>();
-builder.Services.AddScoped<IWorkoutTrackingService, WorkoutTrackingService>();
-builder.Services.AddScoped<IQuestionnaireService, QuestionnaireService>();
+builder.Services.AddScoped<ITokenActions, TokenActions>();   // JWT generation
+builder.Services.AddScoped<IUserActions, UserActions>();
+builder.Services.AddScoped<IExerciseActions, ExerciseActions>();
+builder.Services.AddScoped<IWorkoutPlanActions, WorkoutPlanActions>();
+builder.Services.AddScoped<IMealPlanActions, MealPlanActions>();
+builder.Services.AddScoped<IFoodItemActions, FoodItemActions>();
+builder.Services.AddScoped<IMealDayEntryActions, MealDayEntryActions>();
+builder.Services.AddScoped<IPlanActivationActions, PlanActivationActions>();
+builder.Services.AddScoped<IPlanCompletionActions, PlanCompletionActions>();
+builder.Services.AddScoped<IPlanCustomizationActions, PlanCustomizationActions>();
+builder.Services.AddScoped<IUserPlanFavoriteActions, UserPlanFavoriteActions>();
+builder.Services.AddScoped<IUserProfileActions, UserProfileActions>();
+builder.Services.AddScoped<IWorkoutTrackingActions, WorkoutTrackingActions>();
+builder.Services.AddScoped<IQuestionnaireActions, QuestionnaireActions>();
 
 var app = builder.Build();
 var isDevelopment = app.Environment.IsDevelopment();
