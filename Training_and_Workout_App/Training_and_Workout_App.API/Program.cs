@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -9,6 +9,23 @@ using Training_and_Workout_App.DataAccess.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+// ─── CORS ─────────────────────────────────────────────────────────────────────
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? [];
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy
+            .WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();   // necesar pentru cookies / Authorization header
+    });
+});
 
 // ─── Autentificare JWT Bearer ──────────────────────────────────────────────
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -105,8 +122,9 @@ if (isDevelopment)
 app.UseHttpsRedirection();
 
 // ─── Pipeline — ORDINEA CONTEAZA ──────────────────────────────────────────
-app.UseAuthentication();   // 1. Citeste token, populeaza HttpContext.User
-app.UseAuthorization();    // 2. Verifica [Authorize] si roluri
+app.UseCors("FrontendPolicy");   // 0. CORS trebuie sa fie INAINTEA Auth!
+app.UseAuthentication();          // 1. Citeste token, populeaza HttpContext.User
+app.UseAuthorization();           // 2. Verifica [Authorize] si roluri
 
 app.MapControllers();
 app.MapGet("/", () =>
