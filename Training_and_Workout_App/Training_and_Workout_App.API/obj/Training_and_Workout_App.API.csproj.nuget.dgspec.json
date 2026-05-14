@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.API\\Training_and_Workout_App.API.csproj": {}
+    "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Api\\Training_and_Workout_App.API.csproj": {}
   },
   "projects": {
-    "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.API\\Training_and_Workout_App.API.csproj": {
+    "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Api\\Training_and_Workout_App.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.API\\Training_and_Workout_App.API.csproj",
+        "projectUniqueName": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Api\\Training_and_Workout_App.API.csproj",
         "projectName": "Training_and_Workout_App.API",
-        "projectPath": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.API\\Training_and_Workout_App.API.csproj",
+        "projectPath": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Api\\Training_and_Workout_App.API.csproj",
         "packagesPath": "C:\\Users\\Max\\.nuget\\packages\\",
-        "outputPath": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.API\\obj\\",
+        "outputPath": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -161,6 +161,10 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.Extensions.Identity.Core": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[7.6.3, )"
