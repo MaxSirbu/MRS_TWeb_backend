@@ -1,4 +1,4 @@
-using Training_and_Workout_App.BusinessLayer.Interfaces;
+﻿using Training_and_Workout_App.BusinessLayer.Interfaces;
 using Training_and_Workout_App.DataAccess.Context;
 using Training_and_Workout_App.Domain.Models;
 using Training_and_Workout_App.Domain.Entities;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Training_and_Workout_App.BusinessLayer.Structure;
 
-public class UserService(ApplicationDbContext context, ITokenService tokenService, IConfiguration configuration) : IUserService
+public class UserActions(ApplicationDbContext context, ITokenActions tokenActions, IConfiguration configuration) : IUserActions
 {
     public async Task<UserResponseDto> RegisterAsync(UserRegisterDto dto)
     {
@@ -31,7 +31,7 @@ public class UserService(ApplicationDbContext context, ITokenService tokenServic
 
         // Genereaza JWT — rolul din DB merge direct in token
         var expireMinutes = int.Parse(configuration["Jwt:ExpireMinutes"]!);
-        var token = tokenService.GenerateToken(user.Id, user.FullName, user.Role.ToString());
+        var token = tokenActions.GenerateToken(user.Id, user.FullName, user.Role.ToString());
 
         return new AuthResponseDto
         {

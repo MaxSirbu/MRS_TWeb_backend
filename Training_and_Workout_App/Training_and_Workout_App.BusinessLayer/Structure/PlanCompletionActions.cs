@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Training_and_Workout_App.BusinessLayer.Interfaces;
 using Training_and_Workout_App.DataAccess.Context;
 using Training_and_Workout_App.Domain.Entities;
@@ -6,7 +6,7 @@ using Training_and_Workout_App.Domain.Models;
 
 namespace Training_and_Workout_App.BusinessLayer.Structure;
 
-public class PlanCompletionService(ApplicationDbContext context) : IPlanCompletionService
+public class PlanCompletionActions(ApplicationDbContext context) : IPlanCompletionActions
 {
     public async Task<List<PlanCompletionResponseDto>> GetByUserAsync(int userId, PlanType? planType = null)
     {

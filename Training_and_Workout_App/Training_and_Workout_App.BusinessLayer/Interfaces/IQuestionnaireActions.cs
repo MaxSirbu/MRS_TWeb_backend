@@ -1,8 +1,8 @@
-using Training_and_Workout_App.Domain.Models;
+﻿using Training_and_Workout_App.Domain.Models;
 
 namespace Training_and_Workout_App.BusinessLayer.Interfaces;
 
-public interface IQuestionnaireService
+public interface IQuestionnaireActions
 {
     Task<List<QuestionResponseDto>> GetAllQuestionsAsync();
     Task<List<QuestionnaireEntryResponseDto>> GetEntriesByUserAsync(int userId);

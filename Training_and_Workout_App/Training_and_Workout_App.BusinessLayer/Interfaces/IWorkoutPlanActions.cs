@@ -1,9 +1,9 @@
-using Training_and_Workout_App.Domain.Entities;
+﻿using Training_and_Workout_App.Domain.Entities;
 using Training_and_Workout_App.Domain.Models;
 
 namespace Training_and_Workout_App.BusinessLayer.Interfaces;
 
-public interface IWorkoutPlanService
+public interface IWorkoutPlanActions
 {
     Task<List<WorkoutPlanResponseDto>> GetByUserIdAsync(int userId);
     Task<WorkoutPlanResponseDto?> GetByIdAsync(int id);

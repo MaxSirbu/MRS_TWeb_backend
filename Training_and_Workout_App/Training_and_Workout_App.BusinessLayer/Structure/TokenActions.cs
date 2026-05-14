@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +7,7 @@ using Training_and_Workout_App.BusinessLayer.Interfaces;
 
 namespace Training_and_Workout_App.BusinessLayer.Structure;
 
-public class TokenService(IConfiguration configuration) : ITokenService
+public class TokenActions(IConfiguration configuration) : ITokenActions
 {
     public string GenerateToken(int userId, string fullName, string role)
     {

@@ -1,8 +1,8 @@
-using Training_and_Workout_App.Domain.Models;
+﻿using Training_and_Workout_App.Domain.Models;
 using Training_and_Workout_App.Domain.Entities;
 namespace Training_and_Workout_App.BusinessLayer.Interfaces;
 
-public interface IExerciseService
+public interface IExerciseActions
 {
     Task<List<ExerciseResponseDto>> GetAllAsync();
     Task<List<ExerciseResponseDto>> GetByMuscleGroupAsync(MuscleGroup muscleGroup);  

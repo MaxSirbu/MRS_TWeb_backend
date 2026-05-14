@@ -1,6 +1,6 @@
-namespace Training_and_Workout_App.BusinessLayer.Interfaces;
+﻿namespace Training_and_Workout_App.BusinessLayer.Interfaces;
 
-public interface ITokenService
+public interface ITokenActions
 {
     /// <summary>
     /// Genereaza un JWT semnat cu HMAC-SHA256.

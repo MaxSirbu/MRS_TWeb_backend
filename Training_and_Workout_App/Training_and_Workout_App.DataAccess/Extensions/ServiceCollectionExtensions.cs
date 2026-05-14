@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Training_and_Workout_App.DataAccess.Context;
@@ -18,3 +18,4 @@ public static class ServiceCollectionExtensions
         return services;
     }
 }
+

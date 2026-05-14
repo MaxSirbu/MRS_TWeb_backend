@@ -1,9 +1,9 @@
-using Training_and_Workout_App.Domain.Entities;
+﻿using Training_and_Workout_App.Domain.Entities;
 using Training_and_Workout_App.Domain.Models;
 
 namespace Training_and_Workout_App.BusinessLayer.Interfaces;
 
-public interface IPlanCompletionService
+public interface IPlanCompletionActions
 {
     Task<List<PlanCompletionResponseDto>> GetByUserAsync(int userId, PlanType? planType = null);
     Task<PlanCompletionResponseDto> MarkCompleteAsync(int userId, PlanCompletionCreateDto dto);
