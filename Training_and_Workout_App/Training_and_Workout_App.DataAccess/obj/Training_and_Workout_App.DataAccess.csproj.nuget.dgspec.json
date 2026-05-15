@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.DataAccess\\Training_and_Workout_App.DataAccess.csproj": {}
+    "W:\\Training_and_Workout_App.DataAccess\\Training_and_Workout_App.DataAccess.csproj": {}
   },
   "projects": {
-    "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.DataAccess\\Training_and_Workout_App.DataAccess.csproj": {
+    "W:\\Training_and_Workout_App.DataAccess\\Training_and_Workout_App.DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.DataAccess\\Training_and_Workout_App.DataAccess.csproj",
+        "projectUniqueName": "W:\\Training_and_Workout_App.DataAccess\\Training_and_Workout_App.DataAccess.csproj",
         "projectName": "Training_and_Workout_App.DataAccess",
-        "projectPath": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.DataAccess\\Training_and_Workout_App.DataAccess.csproj",
-        "packagesPath": "C:\\Users\\Max\\.nuget\\packages\\",
-        "outputPath": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.DataAccess\\obj\\",
+        "projectPath": "W:\\Training_and_Workout_App.DataAccess\\Training_and_Workout_App.DataAccess.csproj",
+        "packagesPath": "C:\\Users\\Josep\\.nuget\\packages\\",
+        "outputPath": "W:\\Training_and_Workout_App.DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Max\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Josep\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -31,11 +31,10 @@
         },
         "frameworks": {
           "net8.0": {
-            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj": {
-                "projectPath": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj"
+              "W:\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj": {
+                "projectPath": "W:\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj"
               }
             }
           }
@@ -50,11 +49,10 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net8.0": {
-          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.EntityFrameworkCore.Design": {
@@ -90,24 +88,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300-preview.0.26177.108/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj": {
+    "W:\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj",
+        "projectUniqueName": "W:\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj",
         "projectName": "Training_and_Workout_App.Domain",
-        "projectPath": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj",
-        "packagesPath": "C:\\Users\\Max\\.nuget\\packages\\",
-        "outputPath": "C:\\Local Disk D\\Lectii\\Anul 2\\semestrul 2\\project11\\back\\Training_and_Workout_App\\Training_and_Workout_App.Domain\\obj\\",
+        "projectPath": "W:\\Training_and_Workout_App.Domain\\Training_and_Workout_App.Domain.csproj",
+        "packagesPath": "C:\\Users\\Josep\\.nuget\\packages\\",
+        "outputPath": "W:\\Training_and_Workout_App.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Max\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Josep\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -121,7 +119,6 @@
         },
         "frameworks": {
           "net8.0": {
-            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -136,11 +133,10 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net8.0": {
-          "framework": "net8.0",
           "targetAlias": "net8.0",
           "imports": [
             "net461",
@@ -158,7 +154,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300-preview.0.26177.108/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
