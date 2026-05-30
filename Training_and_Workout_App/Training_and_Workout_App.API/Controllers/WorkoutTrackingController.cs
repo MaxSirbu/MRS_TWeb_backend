@@ -8,7 +8,7 @@ namespace Training_and_Workout_App.API.Controllers;
 [ApiController]
 [Route("api/workouttracking")]
 [Authorize]
-public class WorkoutTrackingController(IWorkoutTrackingActions workoutTrackingActions) : ControllerBase
+public class WorkoutTrackingController(IWorkoutTrackingActions workoutTrackingActions) : AppControllerBase
 {
     // GET api/workouttracking/5
     [HttpGet("{workoutPlanId}")]

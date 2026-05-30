@@ -36,12 +36,22 @@ public class WorkoutPlanController(IWorkoutPlanActions workoutPlanActions) : App
     // PUT /api/workoutplan/{id}
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] WorkoutPlanCreateDto dto)
-        => Ok(await workoutPlanActions.UpdateAsync(id, dto));
+    {
+        var plan = await workoutPlanActions.GetByIdAsync(id);
+        if (plan is null) return NotFound();
+        var ownership = CheckOwnership(plan.UserId);
+        if (ownership is not null) return ownership;
+        return Ok(await workoutPlanActions.UpdateAsync(id, dto));
+    }
 
     // DELETE /api/workoutplan/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
+        var plan = await workoutPlanActions.GetByIdAsync(id);
+        if (plan is null) return NotFound();
+        var ownership = CheckOwnership(plan.UserId);
+        if (ownership is not null) return ownership;
         var deleted = await workoutPlanActions.DeleteAsync(id);
         if (!deleted) return NotFound();
         return NoContent();

@@ -14,3 +14,7 @@
 # ===========================
 **/.vs/
 *.user
+
+# Secrete locale — nu se comit niciodata
+**/appsettings.Development.json
+**/appsettings.Local.json

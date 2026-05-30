@@ -69,4 +69,78 @@ public class UserActions(ApplicationDbContext context, ITokenActions tokenAction
 
         return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
     }
+
+    // ── Pasul 2: update date proprii ──────────────────────────────────────────
+    public async Task<UserResponseDto?> UpdateMeAsync(int userId, UserUpdateDto dto)
+    {
+        var user = await context.Users.FindAsync(userId);
+        if (user is null) return null;
+
+        if (!string.IsNullOrWhiteSpace(dto.FullName))
+            user.FullName = dto.FullName.Trim();
+        if (!string.IsNullOrWhiteSpace(dto.Username))
+            user.Username = dto.Username.Trim();
+
+        await context.SaveChangesAsync();
+        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
+    }
+
+    // ── Pasul 3: admin — listare toti userii ──────────────────────────────────
+    public async Task<List<UserAdminResponseDto>> GetAllAsync()
+    {
+        return await context.Users
+            .OrderBy(u => u.Id)
+            .Select(u => new UserAdminResponseDto
+            {
+                Id       = u.Id,
+                FullName = u.FullName,
+                Username = u.Username,
+                Role     = u.Role.ToString(),
+                Blocked  = u.Blocked,
+            })
+            .ToListAsync();
+    }
+
+    // ── Pasul 3: admin — schimbare rol ────────────────────────────────────────
+    public async Task<UserAdminResponseDto?> SetRoleAsync(int id, SetRoleDto dto)
+    {
+        var user = await context.Users.FindAsync(id);
+        if (user is null) return null;
+
+        if (Enum.TryParse<UserRole>(dto.Role, ignoreCase: true, out var parsed))
+            user.Role = parsed;
+
+        await context.SaveChangesAsync();
+        return new UserAdminResponseDto
+        {
+            Id = user.Id, FullName = user.FullName, Username = user.Username,
+            Role = user.Role.ToString(), Blocked = user.Blocked,
+        };
+    }
+
+    // ── Pasul 3: admin — toggle blocare ───────────────────────────────────────
+    public async Task<UserAdminResponseDto?> ToggleBlockedAsync(int id)
+    {
+        var user = await context.Users.FindAsync(id);
+        if (user is null) return null;
+
+        user.Blocked = !user.Blocked;
+        await context.SaveChangesAsync();
+        return new UserAdminResponseDto
+        {
+            Id = user.Id, FullName = user.FullName, Username = user.Username,
+            Role = user.Role.ToString(), Blocked = user.Blocked,
+        };
+    }
+
+    // ── Pasul 3: admin — stergere user ────────────────────────────────────────
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var user = await context.Users.FindAsync(id);
+        if (user is null) return false;
+
+        context.Users.Remove(user);
+        await context.SaveChangesAsync();
+        return true;
+    }
 }

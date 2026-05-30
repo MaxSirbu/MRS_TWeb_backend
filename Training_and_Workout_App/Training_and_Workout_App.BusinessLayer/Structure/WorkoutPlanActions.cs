@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Training_and_Workout_App.BusinessLayer.Interfaces;
 using Training_and_Workout_App.DataAccess.Context;
 using Training_and_Workout_App.Domain.Entities;
@@ -134,6 +134,7 @@ public class WorkoutPlanActions(ApplicationDbContext context) : IWorkoutPlanActi
     private static WorkoutPlanResponseDto MapToDto(WorkoutPlan wp) => new()
     {
         Id = wp.Id,
+        UserId = wp.UserId,   // necesar pentru ownership check în controller
         Name = wp.Name,
         CreatedAt = wp.CreatedAt,
         UpdatedAt = wp.UpdatedAt,
