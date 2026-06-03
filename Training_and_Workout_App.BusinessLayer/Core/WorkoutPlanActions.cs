@@ -1,29 +1,7 @@
-using Training_and_Workout_App.BusinessLayer.Interfaces;
-using Training_and_Workout_App.Domain.Entities.Exercise;
-using Training_and_Workout_App.Domain.Entities.FAQ;
-using Training_and_Workout_App.Domain.Entities.FoodItem;
-using Training_and_Workout_App.Domain.Entities.MealDayEntry;
 using Training_and_Workout_App.Domain.Entities.Plans;
-using Training_and_Workout_App.Domain.Entities.PlanState;
-using Training_and_Workout_App.Domain.Entities.Question;
-using Training_and_Workout_App.Domain.Entities.QuestionnaireEntry;
-using Training_and_Workout_App.Domain.Entities.User;
-using Training_and_Workout_App.Domain.Entities.WorkoutHistory;
 using Training_and_Workout_App.Domain.Entities.WorkoutTracking;
 using Training_and_Workout_App.Domain.Models.DayPlan;
 using Training_and_Workout_App.Domain.Models.Exercise;
-using Training_and_Workout_App.Domain.Models.FAQ;
-using Training_and_Workout_App.Domain.Models.FoodItem;
-using Training_and_Workout_App.Domain.Models.MealDayEntry;
-using Training_and_Workout_App.Domain.Models.MealPlan;
-using Training_and_Workout_App.Domain.Models.PlanActivation;
-using Training_and_Workout_App.Domain.Models.PlanCompletion;
-using Training_and_Workout_App.Domain.Models.PlanCustomization;
-using Training_and_Workout_App.Domain.Models.Question;
-using Training_and_Workout_App.Domain.Models.QuestionnaireEntry;
-using Training_and_Workout_App.Domain.Models.User;
-using Training_and_Workout_App.Domain.Models.UserPlanFavorite;
-using Training_and_Workout_App.Domain.Models.UserProfile;
 using Training_and_Workout_App.Domain.Models.WorkoutPlan;
 using Training_and_Workout_App.Domain.Models.WorkoutTracking;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +18,9 @@ public class WorkoutPlanActions(ApplicationDbContext context)
             .Include(wp => wp.Days)
                 .ThenInclude(d => d.DayPlanExercises)
                     .ThenInclude(dpe => dpe.Exercise)
+            .Include(wp => wp.Days)
+                .ThenInclude(d => d.DayPlanExercises)
+                    .ThenInclude(dpe => dpe.Sets)
             .Include(wp => wp.WorkoutTracking)
                 .ThenInclude(wt => wt!.Sets)
             .Include(wp => wp.WorkoutTracking)
@@ -54,6 +35,9 @@ public class WorkoutPlanActions(ApplicationDbContext context)
             .Include(wp => wp.Days)
                 .ThenInclude(d => d.DayPlanExercises)
                     .ThenInclude(dpe => dpe.Exercise)
+            .Include(wp => wp.Days)
+                .ThenInclude(d => d.DayPlanExercises)
+                    .ThenInclude(dpe => dpe.Sets)
             .Include(wp => wp.WorkoutTracking)
                 .ThenInclude(wt => wt!.Sets)
             .Include(wp => wp.WorkoutTracking)
@@ -74,27 +58,10 @@ public class WorkoutPlanActions(ApplicationDbContext context)
             UserId = userId
         };
 
-        // Adaugă zilele și exercițiile asociate
         int dayNumber = 1;
         foreach (var dayDto in dto.Days)
         {
-            var day = new DayPlanData
-            {
-                Label = dayDto.Label,
-                DayNumber = dayNumber++
-            };
-
-            int order = 0;
-            foreach (var exId in dayDto.ExerciseIds)
-            {
-                day.DayPlanExercises.Add(new DayPlanExerciseData
-                {
-                    ExerciseId = exId,
-                    Order = order++
-                });
-            }
-
-            plan.Days.Add(day);
+            plan.Days.Add(CreateDayPlan(dayDto, dayNumber++));
         }
 
         context.WorkoutPlans.Add(plan);
@@ -109,35 +76,20 @@ public class WorkoutPlanActions(ApplicationDbContext context)
         var plan = await context.WorkoutPlans
             .Include(wp => wp.Days)
                 .ThenInclude(d => d.DayPlanExercises)
+                    .ThenInclude(dpe => dpe.Sets)
             .FirstOrDefaultAsync(wp => wp.Id == id)
             ?? throw new KeyNotFoundException($"WorkoutPlan {id} not found.");
 
         plan.Name = dto.Name;
         plan.UpdatedAt = DateTime.UtcNow;
 
-        // Șterge zilele vechi (cascade va șterge și DayPlanExercise)
         context.DayPlans.RemoveRange(plan.Days);
 
         int dayNumber = 1;
         foreach (var dayDto in dto.Days)
         {
-            var day = new DayPlanData
-            {
-                Label = dayDto.Label,
-                DayNumber = dayNumber++,
-                WorkoutPlanId = plan.Id
-            };
-
-            int order = 0;
-            foreach (var exId in dayDto.ExerciseIds)
-            {
-                day.DayPlanExercises.Add(new DayPlanExerciseData
-                {
-                    ExerciseId = exId,
-                    Order = order++
-                });
-            }
-
+            var day = CreateDayPlan(dayDto, dayNumber++);
+            day.WorkoutPlanId = plan.Id;
             context.DayPlans.Add(day);
         }
 
@@ -155,7 +107,46 @@ public class WorkoutPlanActions(ApplicationDbContext context)
         return true;
     }
 
-    // Metodă privată de mapare pentru a nu duplica codul
+    private static DayPlanData CreateDayPlan(DayPlanCreateDto dayDto, int dayNumber)
+    {
+        var day = new DayPlanData
+        {
+            Label = dayDto.Label,
+            DayNumber = dayNumber
+        };
+
+        var exercises = dayDto.Exercises.Count > 0
+            ? dayDto.Exercises.OrderBy(e => e.Order)
+            : dayDto.ExerciseIds.Select((exerciseId, index) => new WorkoutDayExerciseCreateDto
+            {
+                ExerciseId = exerciseId,
+                Order = index
+            });
+
+        foreach (var exerciseDto in exercises)
+        {
+            var dayExercise = new DayPlanExerciseData
+            {
+                ExerciseId = exerciseDto.ExerciseId,
+                Order = exerciseDto.Order
+            };
+
+            foreach (var setDto in exerciseDto.Sets.Select((set, index) => new { set, index }))
+            {
+                dayExercise.Sets.Add(new WorkoutSetData
+                {
+                    Order = setDto.index,
+                    Weight = setDto.set.Weight,
+                    Reps = setDto.set.Reps
+                });
+            }
+
+            day.DayPlanExercises.Add(dayExercise);
+        }
+
+        return day;
+    }
+
     private static WorkoutPlanResponseDto MapToDto(WorkoutPlanData wp) => new()
     {
         Id = wp.Id,
@@ -169,6 +160,7 @@ public class WorkoutPlanActions(ApplicationDbContext context)
             {
                 Id = d.Id,
                 Label = d.Label,
+                DayNumber = d.DayNumber,
                 Exercises = d.DayPlanExercises
                     .OrderBy(dpe => dpe.Order)
                     .Select(dpe => new ExerciseResponseDto
@@ -178,6 +170,26 @@ public class WorkoutPlanActions(ApplicationDbContext context)
                         MuscleGroup = dpe.Exercise.MuscleGroup,
                         GifUrl = dpe.Exercise.GifUrl,
                         Instructions = dpe.Exercise.Instructions
+                    }).ToList(),
+                DayExercises = d.DayPlanExercises
+                    .OrderBy(dpe => dpe.Order)
+                    .Select(dpe => new WorkoutDayExerciseResponseDto
+                    {
+                        DayPlanId = dpe.DayPlanId,
+                        ExerciseId = dpe.ExerciseId,
+                        Order = dpe.Order,
+                        Exercise = new ExerciseResponseDto
+                        {
+                            Id = dpe.Exercise.Id,
+                            Name = dpe.Exercise.Name,
+                            MuscleGroup = dpe.Exercise.MuscleGroup,
+                            GifUrl = dpe.Exercise.GifUrl,
+                            Instructions = dpe.Exercise.Instructions
+                        },
+                        Sets = dpe.Sets
+                            .OrderBy(s => s.Order)
+                            .Select(s => new WorkoutSetDto { Weight = s.Weight, Reps = s.Reps })
+                            .ToList()
                     }).ToList()
             }).ToList(),
         WorkoutTracking = wp.WorkoutTracking is null ? null : new WorkoutTrackingStateResponseDto

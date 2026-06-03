@@ -1,30 +1,3 @@
-using Training_and_Workout_App.Domain.Entities.Exercise;
-using Training_and_Workout_App.Domain.Entities.FAQ;
-using Training_and_Workout_App.Domain.Entities.FoodItem;
-using Training_and_Workout_App.Domain.Entities.MealDayEntry;
-using Training_and_Workout_App.Domain.Entities.Plans;
-using Training_and_Workout_App.Domain.Entities.PlanState;
-using Training_and_Workout_App.Domain.Entities.Question;
-using Training_and_Workout_App.Domain.Entities.QuestionnaireEntry;
-using Training_and_Workout_App.Domain.Entities.User;
-using Training_and_Workout_App.Domain.Entities.WorkoutHistory;
-using Training_and_Workout_App.Domain.Entities.WorkoutTracking;
-using Training_and_Workout_App.Domain.Models.DayPlan;
-using Training_and_Workout_App.Domain.Models.Exercise;
-using Training_and_Workout_App.Domain.Models.FAQ;
-using Training_and_Workout_App.Domain.Models.FoodItem;
-using Training_and_Workout_App.Domain.Models.MealDayEntry;
-using Training_and_Workout_App.Domain.Models.MealPlan;
-using Training_and_Workout_App.Domain.Models.PlanActivation;
-using Training_and_Workout_App.Domain.Models.PlanCompletion;
-using Training_and_Workout_App.Domain.Models.PlanCustomization;
-using Training_and_Workout_App.Domain.Models.Question;
-using Training_and_Workout_App.Domain.Models.QuestionnaireEntry;
-using Training_and_Workout_App.Domain.Models.User;
-using Training_and_Workout_App.Domain.Models.UserPlanFavorite;
-using Training_and_Workout_App.Domain.Models.UserProfile;
-using Training_and_Workout_App.Domain.Models.WorkoutPlan;
-using Training_and_Workout_App.Domain.Models.WorkoutTracking;
 using System.Text.Json.Serialization;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -65,13 +38,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer           = true,
-            ValidIssuer              = builder.Configuration["Jwt:Issuer"],
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
 
-            ValidateAudience         = true,
-            ValidAudience            = builder.Configuration["Jwt:Audience"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
 
-            ValidateLifetime         = true,   // verifica "exp" la fiecare request
+            ValidateLifetime = true,   // verifica "exp" la fiecare request
 
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
@@ -87,20 +60,20 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title       = "Training and Workout App API",
-        Version     = "v1",
+        Title = "Training and Workout App API",
+        Version = "v1",
         Description = "Documentatie Swagger pentru backend-ul aplicatiei."
     });
 
     // Definim schema de securitate Bearer
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Name         = "Authorization",
-        Type         = SecuritySchemeType.Http,
-        Scheme       = "Bearer",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
         BearerFormat = "JWT",
-        In           = ParameterLocation.Header,
-        Description  = "Introdu token-ul JWT: Bearer &lt;token&gt;"
+        In = ParameterLocation.Header,
+        Description = "Introdu token-ul JWT: Bearer &lt;token&gt;"
     });
 
     // Aplicam schema la toate endpoint-urile

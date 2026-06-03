@@ -144,6 +144,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .WithMany(wt => wt.Sets)
                   .HasForeignKey(ws => ws.WorkoutTrackingStateId)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(ws => ws.DayPlanExercise)
+                  .WithMany(dpe => dpe.Sets)
+                  .HasForeignKey(ws => new { ws.DayPlanId, ws.ExerciseId })
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(ws => ws.Order).HasDefaultValue(0);
         });
 
         // ── PauseTime ────────────────────────────────────────────────────────

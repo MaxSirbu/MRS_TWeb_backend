@@ -1,31 +1,6 @@
 using Training_and_Workout_App.BusinessLayer.Interfaces;
-using Training_and_Workout_App.Domain.Entities.Exercise;
-using Training_and_Workout_App.Domain.Entities.FAQ;
-using Training_and_Workout_App.Domain.Entities.FoodItem;
-using Training_and_Workout_App.Domain.Entities.MealDayEntry;
-using Training_and_Workout_App.Domain.Entities.Plans;
-using Training_and_Workout_App.Domain.Entities.PlanState;
-using Training_and_Workout_App.Domain.Entities.Question;
-using Training_and_Workout_App.Domain.Entities.QuestionnaireEntry;
 using Training_and_Workout_App.Domain.Entities.User;
-using Training_and_Workout_App.Domain.Entities.WorkoutHistory;
-using Training_and_Workout_App.Domain.Entities.WorkoutTracking;
-using Training_and_Workout_App.Domain.Models.DayPlan;
-using Training_and_Workout_App.Domain.Models.Exercise;
-using Training_and_Workout_App.Domain.Models.FAQ;
-using Training_and_Workout_App.Domain.Models.FoodItem;
-using Training_and_Workout_App.Domain.Models.MealDayEntry;
-using Training_and_Workout_App.Domain.Models.MealPlan;
-using Training_and_Workout_App.Domain.Models.PlanActivation;
-using Training_and_Workout_App.Domain.Models.PlanCompletion;
-using Training_and_Workout_App.Domain.Models.PlanCustomization;
-using Training_and_Workout_App.Domain.Models.Question;
-using Training_and_Workout_App.Domain.Models.QuestionnaireEntry;
 using Training_and_Workout_App.Domain.Models.User;
-using Training_and_Workout_App.Domain.Models.UserPlanFavorite;
-using Training_and_Workout_App.Domain.Models.UserProfile;
-using Training_and_Workout_App.Domain.Models.WorkoutPlan;
-using Training_and_Workout_App.Domain.Models.WorkoutTracking;
 using Training_and_Workout_App.DataAccess.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -71,10 +46,10 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
 
         return new AuthResponseDto
         {
-            UserId    = user.Id,
-            FullName  = user.FullName,
-            Role      = user.Role.ToString(),
-            Token     = token,
+            UserId = user.Id,
+            FullName = user.FullName,
+            Role = user.Role.ToString(),
+            Token = token,
             ExpiresAt = DateTime.UtcNow.AddMinutes(expireMinutes)
         };
     }
@@ -117,11 +92,11 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
             .OrderBy(u => u.Id)
             .Select(u => new UserAdminResponseDto
             {
-                Id       = u.Id,
+                Id = u.Id,
                 FullName = u.FullName,
                 Username = u.Username,
-                Role     = u.Role.ToString(),
-                Blocked  = u.Blocked,
+                Role = u.Role.ToString(),
+                Blocked = u.Blocked,
             })
             .ToListAsync();
     }
@@ -138,8 +113,11 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         await context.SaveChangesAsync();
         return new UserAdminResponseDto
         {
-            Id = user.Id, FullName = user.FullName, Username = user.Username,
-            Role = user.Role.ToString(), Blocked = user.Blocked,
+            Id = user.Id,
+            FullName = user.FullName,
+            Username = user.Username,
+            Role = user.Role.ToString(),
+            Blocked = user.Blocked,
         };
     }
 
@@ -153,8 +131,11 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         await context.SaveChangesAsync();
         return new UserAdminResponseDto
         {
-            Id = user.Id, FullName = user.FullName, Username = user.Username,
-            Role = user.Role.ToString(), Blocked = user.Blocked,
+            Id = user.Id,
+            FullName = user.FullName,
+            Username = user.Username,
+            Role = user.Role.ToString(),
+            Blocked = user.Blocked,
         };
     }
 
