@@ -36,7 +36,11 @@ public class ExerciseActions(ApplicationDbContext context)
     public async Task<List<ExerciseResponseDto>> GetAllAsync()
     {
         return await context.Exercises
-            .Where(e => !e.Hidden)
+            .Where(e => !e.Hidden
+                && e.GifUrl != ""
+                && e.GifUrl != "string"
+                && e.GifUrl != "null"
+                && e.GifUrl != "undefined")
             .Select(e => new ExerciseResponseDto
             {
                 Id = e.Id,
@@ -51,7 +55,12 @@ public class ExerciseActions(ApplicationDbContext context)
     public async Task<List<ExerciseResponseDto>> GetByMuscleGroupAsync(MuscleGroup muscleGroup)
     {
         return await context.Exercises
-            .Where(e => !e.Hidden && e.MuscleGroup == muscleGroup)
+            .Where(e => !e.Hidden
+                && e.MuscleGroup == muscleGroup
+                && e.GifUrl != ""
+                && e.GifUrl != "string"
+                && e.GifUrl != "null"
+                && e.GifUrl != "undefined")
             .Select(e => new ExerciseResponseDto
             {
                 Id = e.Id,
