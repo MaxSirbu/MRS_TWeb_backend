@@ -118,7 +118,8 @@ public class WorkoutPlanActions(ApplicationDbContext context)
         var day = new DayPlanData
         {
             Label = dayDto.Label,
-            DayNumber = dayNumber
+            DayNumber = dayNumber,
+            IsRestDay = dayDto.IsRestDay
         };
 
         var exercises = dayDto.Exercises.Count > 0
@@ -172,6 +173,7 @@ public class WorkoutPlanActions(ApplicationDbContext context)
                 Id = d.Id,
                 Label = d.Label,
                 DayNumber = d.DayNumber,
+                IsRestDay = d.IsRestDay,
                 Exercises = d.DayPlanExercises
                     .OrderBy(dpe => dpe.Order)
                     .Select(dpe => new ExerciseResponseDto

@@ -97,6 +97,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasKey(dp => dp.Id);
             entity.Property(dp => dp.Label).IsRequired().HasMaxLength(50);
             entity.Property(dp => dp.DayNumber).IsRequired();
+            entity.Property(dp => dp.IsRestDay).IsRequired();
 
             // DayPlan -> WorkoutPlan (many-to-one)
             entity.HasOne(dp => dp.WorkoutPlan)

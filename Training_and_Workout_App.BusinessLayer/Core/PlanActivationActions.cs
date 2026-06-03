@@ -7,6 +7,8 @@ namespace Training_and_Workout_App.BusinessLayer.Core;
 
 public class PlanActivationActions(ApplicationDbContext context)
 {
+    private static DateOnly Today() => DateOnly.FromDateTime(DateTime.Now);
+
     public async Task<PlanActivationResponseDto?> GetActiveAsync(int userId, PlanType planType)
     {
         var activation = await context.PlanActivations
@@ -17,7 +19,7 @@ public class PlanActivationActions(ApplicationDbContext context)
 
     public async Task<PlanActivationResponseDto> ActivateAsync(int userId, PlanActivationCreateDto dto)
     {
-        // Dacă există deja o activare de același tip → o înlocuim (o ștergem mai întâi)
+        // Daca exista deja o activare de acelasi tip, o stergem inainte de cea noua.
         var existing = await context.PlanActivations
             .FirstOrDefaultAsync(pa => pa.UserId == userId && pa.PlanType == dto.PlanType);
 
@@ -28,7 +30,7 @@ public class PlanActivationActions(ApplicationDbContext context)
         {
             PlanType = dto.PlanType,
             PlanIdentifier = dto.PlanIdentifier,
-            ActivatedAt = DateOnly.FromDateTime(DateTime.UtcNow),
+            ActivatedAt = Today(),
             TotalDays = dto.TotalDays,
             UserId = userId
         };
@@ -57,7 +59,7 @@ public class PlanActivationActions(ApplicationDbContext context)
             .FirstOrDefaultAsync(pa => pa.UserId == userId && pa.PlanType == planType)
             ?? throw new KeyNotFoundException($"No active {planType} plan for user {userId}.");
 
-        activation.LastCycleResetAt = DateOnly.FromDateTime(DateTime.UtcNow);
+        activation.LastCycleResetAt = Today();
         await context.SaveChangesAsync();
 
         return MapToDto(activation);

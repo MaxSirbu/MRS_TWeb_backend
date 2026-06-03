@@ -15,6 +15,8 @@ public class DayPlanData
     [Range(1, 365)]
     public int DayNumber { get; set; }
 
+    public bool IsRestDay { get; set; }
+
     // FK -> WorkoutPlan
     public int WorkoutPlanId { get; set; }
     public WorkoutPlanData WorkoutPlan { get; set; } = null!;
