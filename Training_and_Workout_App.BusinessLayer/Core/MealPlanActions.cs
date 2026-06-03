@@ -69,6 +69,45 @@ public class MealPlanActions(ApplicationDbContext context)
         return true;
     }
 
+    public async Task<MealCategoryFoodItemResponseDto?> UpdateItemQuantityAsync(
+        int itemId,
+        int currentUserId,
+        bool isAdmin,
+        MealItemQuantityUpdateDto dto)
+    {
+        var item = await context.MealCategoryFoodItems
+            .Include(i => i.FoodItem)
+            .Include(i => i.MealCategory)
+                .ThenInclude(category => category.MealPlanDay)
+                    .ThenInclude(day => day.MealPlan)
+            .FirstOrDefaultAsync(i => i.Id == itemId);
+
+        if (item is null) return null;
+        if (!isAdmin && item.MealCategory.MealPlanDay.MealPlan.UserId != currentUserId) return null;
+
+        var multiplier = dto.QuantityGrams / Math.Max(item.FoodItem.Grams, 1);
+        item.QuantityGrams = dto.QuantityGrams;
+        item.Kcal = Math.Round(item.FoodItem.Kcal * multiplier, 2);
+        item.Protein = Math.Round(item.FoodItem.Protein * multiplier, 2);
+        item.Carbs = Math.Round(item.FoodItem.Carbs * multiplier, 2);
+        item.Fats = Math.Round(item.FoodItem.Fats * multiplier, 2);
+
+        await context.SaveChangesAsync();
+
+        return new MealCategoryFoodItemResponseDto
+        {
+            Id = item.Id,
+            FoodItemId = item.FoodItemId,
+            Order = item.Order,
+            QuantityGrams = item.QuantityGrams,
+            Kcal = item.Kcal,
+            Protein = item.Protein,
+            Carbs = item.Carbs,
+            Fats = item.Fats,
+            FoodItem = MapFoodItem(item.FoodItem)
+        };
+    }
+
     private async Task ReplaceDaysAsync(int mealPlanId, List<MealPlanDayCreateDto> days)
     {
         var existingDays = await context.MealPlanDays

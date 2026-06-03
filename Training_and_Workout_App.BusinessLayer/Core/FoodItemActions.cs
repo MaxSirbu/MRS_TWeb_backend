@@ -79,7 +79,7 @@ public class FoodItemActions(ApplicationDbContext context)
         var item = await context.FoodItems.FindAsync(id);
         if (item is null) return false;
 
-        context.FoodItems.Remove(item);
+        item.Hidden = true;
         await context.SaveChangesAsync();
         return true;
     }

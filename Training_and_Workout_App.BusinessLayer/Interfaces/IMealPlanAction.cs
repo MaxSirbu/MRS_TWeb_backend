@@ -8,5 +8,10 @@ public interface IMealPlanAction
     Task<MealPlanResponseDto?> GetByIdAsync(int id);
     Task<MealPlanResponseDto> CreateAsync(int userId, MealPlanCreateDto dto);
     Task<MealPlanResponseDto> UpdateAsync(int id, MealPlanCreateDto dto);
+    Task<MealCategoryFoodItemResponseDto?> UpdateItemQuantityAsync(
+        int itemId,
+        int currentUserId,
+        bool isAdmin,
+        MealItemQuantityUpdateDto dto);
     Task<bool> DeleteAsync(int id);
 }

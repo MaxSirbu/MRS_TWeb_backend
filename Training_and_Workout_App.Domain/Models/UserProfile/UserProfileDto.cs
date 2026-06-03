@@ -16,4 +16,7 @@ public class UserProfileDto
     public int Streak { get; set; }
 
     public DateOnly? LastActiveDate { get; set; }
+
+    [StringLength(500)]
+    public string AvatarUrl { get; set; } = string.Empty;
 }

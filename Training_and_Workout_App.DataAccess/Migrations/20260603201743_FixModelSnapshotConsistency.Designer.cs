@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Training_and_Workout_App.DataAccess.Context;
 
@@ -11,9 +12,11 @@ using Training_and_Workout_App.DataAccess.Context;
 namespace Training_and_Workout_App.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260603201743_FixModelSnapshotConsistency")]
+    partial class FixModelSnapshotConsistency
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -862,30 +865,19 @@ namespace Training_and_Workout_App.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("DayPlanId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ExerciseId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Minutes")
                         .HasColumnType("int");
 
                     b.Property<int>("Seconds")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkoutTrackingStateId")
+                    b.Property<int>("WorkoutTrackingStateId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("WorkoutTrackingStateId")
-                        .IsUnique()
-                        .HasFilter("[WorkoutTrackingStateId] IS NOT NULL");
-
-                    b.HasIndex("DayPlanId", "ExerciseId")
-                        .IsUnique()
-                        .HasFilter("[DayPlanId] IS NOT NULL AND [ExerciseId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("PauseTimes");
                 });
@@ -1208,14 +1200,8 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                     b.HasOne("Training_and_Workout_App.Domain.Entities.WorkoutTracking.WorkoutTrackingStateData", "WorkoutTrackingState")
                         .WithOne("PauseTime")
                         .HasForeignKey("Training_and_Workout_App.Domain.Entities.WorkoutTracking.PauseTimeData", "WorkoutTrackingStateId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Training_and_Workout_App.Domain.Entities.Plans.DayPlanExerciseData", "DayPlanExercise")
-                        .WithOne("PauseTime")
-                        .HasForeignKey("Training_and_Workout_App.Domain.Entities.WorkoutTracking.PauseTimeData", "DayPlanId", "ExerciseId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("DayPlanExercise");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("WorkoutTrackingState");
                 });
@@ -1270,8 +1256,6 @@ namespace Training_and_Workout_App.DataAccess.Migrations
 
             modelBuilder.Entity("Training_and_Workout_App.Domain.Entities.Plans.DayPlanExerciseData", b =>
                 {
-                    b.Navigation("PauseTime");
-
                     b.Navigation("Sets");
                 });
 

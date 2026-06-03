@@ -18,5 +18,7 @@ public class DayPlanExerciseData
     [Range(0, int.MaxValue)]
     public int Order { get; set; }
 
+    public PauseTimeData? PauseTime { get; set; }
+
     public ICollection<WorkoutSetData> Sets { get; set; } = [];
 }

@@ -120,6 +120,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .HasForeignKey(dpe => dpe.ExerciseId)
                   .OnDelete(DeleteBehavior.Restrict);
 
+            entity.HasOne(dpe => dpe.PauseTime)
+                  .WithOne(pt => pt.DayPlanExercise)
+                  .HasForeignKey<PauseTimeData>(pt => new { pt.DayPlanId, pt.ExerciseId })
+                  .OnDelete(DeleteBehavior.NoAction);
+
             entity.Property(dpe => dpe.Order).HasDefaultValue(0);
         });
 
@@ -157,6 +162,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<PauseTimeData>(entity =>
         {
             entity.HasKey(pt => pt.Id);
+            entity.HasIndex(pt => new { pt.DayPlanId, pt.ExerciseId })
+                  .IsUnique()
+                  .HasFilter("[DayPlanId] IS NOT NULL AND [ExerciseId] IS NOT NULL");
         });
 
         // ── MealPlan ─────────────────────────────────────────────────────────
@@ -172,6 +180,46 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .WithMany(u => u.MealPlans)
                   .HasForeignKey(mp => mp.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<MealPlanDayData>(entity =>
+        {
+            entity.HasKey(day => day.Id);
+            entity.Property(day => day.Label).IsRequired().HasMaxLength(50);
+
+            entity.HasOne(day => day.MealPlan)
+                  .WithMany()
+                  .HasForeignKey(day => day.MealPlanId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<MealCategoryData>(entity =>
+        {
+            entity.HasKey(category => category.Id);
+            entity.Property(category => category.Slot).HasConversion<string>().HasMaxLength(20);
+            entity.Property(category => category.Order).HasDefaultValue(0);
+
+            entity.HasOne(category => category.MealPlanDay)
+                  .WithMany(day => day.Categories)
+                  .HasForeignKey(category => category.MealPlanDayId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<MealCategoryFoodItemData>(entity =>
+        {
+            entity.HasKey(item => item.Id);
+            entity.Property(item => item.Order).HasDefaultValue(0);
+            entity.Property(item => item.QuantityGrams).HasDefaultValue(100.0);
+
+            entity.HasOne(item => item.MealCategory)
+                  .WithMany(category => category.Items)
+                  .HasForeignKey(item => item.MealCategoryId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(item => item.FoodItem)
+                  .WithMany()
+                  .HasForeignKey(item => item.FoodItemId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
 
         // ── Question ─────────────────────────────────────────────────────────
@@ -221,6 +269,28 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
+        modelBuilder.Entity<FaqCategoryData>(entity =>
+        {
+            entity.HasKey(category => category.Id);
+            entity.Property(category => category.Title).IsRequired().HasMaxLength(120);
+            entity.Property(category => category.Icon).IsRequired().HasMaxLength(40);
+            entity.Property(category => category.Order).HasDefaultValue(0);
+        });
+
+        modelBuilder.Entity<FaqQuestionData>(entity =>
+        {
+            entity.HasKey(question => question.Id);
+            entity.Property(question => question.Question).IsRequired().HasMaxLength(300);
+            entity.Property(question => question.Answer).IsRequired().HasMaxLength(2000);
+            entity.Property(question => question.Icon).IsRequired().HasMaxLength(40);
+            entity.Property(question => question.Order).HasDefaultValue(0);
+
+            entity.HasOne(question => question.Category)
+                  .WithMany(category => category.Questions)
+                  .HasForeignKey(question => question.FaqCategoryId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
         // ── FoodItem ─────────────────────────────────────────────────────────
         modelBuilder.Entity<FoodItemData>(entity =>
         {
@@ -236,6 +306,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<UserProfileData>(entity =>
         {
             entity.HasKey(up => up.Id);
+            entity.Property(up => up.AvatarUrl).HasMaxLength(500);
 
             entity.HasOne(up => up.User)
                   .WithOne(u => u.UserProfile)

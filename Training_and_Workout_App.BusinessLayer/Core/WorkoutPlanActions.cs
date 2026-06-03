@@ -21,6 +21,9 @@ public class WorkoutPlanActions(ApplicationDbContext context)
             .Include(wp => wp.Days)
                 .ThenInclude(d => d.DayPlanExercises)
                     .ThenInclude(dpe => dpe.Sets)
+            .Include(wp => wp.Days)
+                .ThenInclude(d => d.DayPlanExercises)
+                    .ThenInclude(dpe => dpe.PauseTime)
             .Include(wp => wp.WorkoutTracking)
                 .ThenInclude(wt => wt!.Sets)
             .Include(wp => wp.WorkoutTracking)
@@ -38,6 +41,9 @@ public class WorkoutPlanActions(ApplicationDbContext context)
             .Include(wp => wp.Days)
                 .ThenInclude(d => d.DayPlanExercises)
                     .ThenInclude(dpe => dpe.Sets)
+            .Include(wp => wp.Days)
+                .ThenInclude(d => d.DayPlanExercises)
+                    .ThenInclude(dpe => dpe.PauseTime)
             .Include(wp => wp.WorkoutTracking)
                 .ThenInclude(wt => wt!.Sets)
             .Include(wp => wp.WorkoutTracking)
@@ -128,7 +134,12 @@ public class WorkoutPlanActions(ApplicationDbContext context)
             var dayExercise = new DayPlanExerciseData
             {
                 ExerciseId = exerciseDto.ExerciseId,
-                Order = exerciseDto.Order
+                Order = exerciseDto.Order,
+                PauseTime = new PauseTimeData
+                {
+                    Minutes = exerciseDto.PauseTime.Minutes,
+                    Seconds = exerciseDto.PauseTime.Seconds
+                }
             };
 
             foreach (var setDto in exerciseDto.Sets.Select((set, index) => new { set, index }))
@@ -186,6 +197,13 @@ public class WorkoutPlanActions(ApplicationDbContext context)
                             GifUrl = dpe.Exercise.GifUrl,
                             Instructions = dpe.Exercise.Instructions
                         },
+                        PauseTime = dpe.PauseTime is null
+                            ? new PauseTimeDto { Minutes = 2, Seconds = 0 }
+                            : new PauseTimeDto
+                            {
+                                Minutes = dpe.PauseTime.Minutes,
+                                Seconds = dpe.PauseTime.Seconds
+                            },
                         Sets = dpe.Sets
                             .OrderBy(s => s.Order)
                             .Select(s => new WorkoutSetDto { Weight = s.Weight, Reps = s.Reps })

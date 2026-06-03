@@ -84,12 +84,34 @@ public class ExerciseActions(ApplicationDbContext context)
         };
     }
 
+    public async Task<ExerciseResponseDto?> UpdateAsync(int id, ExerciseCreateDto dto)
+    {
+        var exercise = await context.Exercises.FindAsync(id);
+        if (exercise is null) return null;
+
+        exercise.Name = dto.Name;
+        exercise.MuscleGroup = dto.MuscleGroup;
+        exercise.GifUrl = dto.GifUrl;
+        exercise.Instructions = dto.Instructions;
+
+        await context.SaveChangesAsync();
+
+        return new ExerciseResponseDto
+        {
+            Id = exercise.Id,
+            Name = exercise.Name,
+            MuscleGroup = exercise.MuscleGroup,
+            GifUrl = exercise.GifUrl,
+            Instructions = exercise.Instructions
+        };
+    }
+
     public async Task<bool> DeleteAsync(int id)
     {
         var exercise = await context.Exercises.FindAsync(id);
         if (exercise is null) return false;
 
-        context.Exercises.Remove(exercise);
+        exercise.Hidden = true;
         await context.SaveChangesAsync();
         return true;
     }

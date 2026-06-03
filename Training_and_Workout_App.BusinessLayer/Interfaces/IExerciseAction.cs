@@ -8,5 +8,6 @@ public interface IExerciseAction
     Task<List<ExerciseResponseDto>> GetByMuscleGroupAsync(MuscleGroup muscleGroup);
     Task<ExerciseResponseDto?> GetByIdAsync(int id);
     Task<ExerciseResponseDto> CreateAsync(ExerciseCreateDto dto);
+    Task<ExerciseResponseDto?> UpdateAsync(int id, ExerciseCreateDto dto);
     Task<bool> DeleteAsync(int id);
 }

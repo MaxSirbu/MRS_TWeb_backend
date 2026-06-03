@@ -20,7 +20,8 @@ public class UserProfileActions(ApplicationDbContext context)
             Height = profile.Height,
             Age = profile.Age,
             Streak = profile.Streak,
-            LastActiveDate = profile.LastActiveDate
+            LastActiveDate = profile.LastActiveDate,
+            AvatarUrl = profile.AvatarUrl
         };
     }
 
@@ -37,6 +38,7 @@ public class UserProfileActions(ApplicationDbContext context)
             existing.Age = dto.Age;
             existing.Streak = dto.Streak;
             existing.LastActiveDate = dto.LastActiveDate;
+            existing.AvatarUrl = dto.AvatarUrl ?? existing.AvatarUrl;
         }
         else
         {
@@ -48,6 +50,7 @@ public class UserProfileActions(ApplicationDbContext context)
                 Age = dto.Age,
                 Streak = dto.Streak,
                 LastActiveDate = dto.LastActiveDate,
+                AvatarUrl = dto.AvatarUrl ?? string.Empty,
                 UserId = userId
             });
         }

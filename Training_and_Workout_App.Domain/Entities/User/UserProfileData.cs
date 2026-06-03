@@ -21,6 +21,9 @@ public class UserProfileData
 
     public DateOnly? LastActiveDate { get; set; }
 
+    [StringLength(500)]
+    public string AvatarUrl { get; set; } = string.Empty;
+
     // FK -> User (one-to-one)
     public int UserId { get; set; }
     public UserData User { get; set; } = null!;

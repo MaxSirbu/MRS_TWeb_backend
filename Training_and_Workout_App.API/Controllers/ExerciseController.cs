@@ -35,6 +35,15 @@ public class ExerciseController(IExerciseAction exerciseActions) : ControllerBas
     public async Task<IActionResult> Create([FromBody] ExerciseCreateDto dto)
         => Ok(await exerciseActions.CreateAsync(dto));
 
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Update(int id, [FromBody] ExerciseCreateDto dto)
+    {
+        var updated = await exerciseActions.UpdateAsync(id, dto);
+        if (updated is null) return NotFound();
+        return Ok(updated);
+    }
+
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]   // doar Admin sterge exercitii
     public async Task<IActionResult> Delete(int id)
