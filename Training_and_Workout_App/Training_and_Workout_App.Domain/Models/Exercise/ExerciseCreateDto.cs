@@ -19,4 +19,5 @@ public class ExerciseCreateDto
     [Required]
     [StringLength(2000, MinimumLength = 1)]
     public string Instructions { get; set; } = string.Empty;
+
 }

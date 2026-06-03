@@ -5,8 +5,9 @@ namespace Training_and_Workout_App.Domain.Models;
 public class UserLoginDto
 {
     [Required]
-    [StringLength(100, MinimumLength = 2)]
-    public string FullName { get; set; } = string.Empty;
+    [EmailAddress]
+    [StringLength(256)]
+    public string Username { get; set; } = string.Empty;   // email
 
     [Required]
     [StringLength(256, MinimumLength = 8)]

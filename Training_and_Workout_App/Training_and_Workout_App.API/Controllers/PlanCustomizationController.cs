@@ -1,0 +1,30 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Training_and_Workout_App.BusinessLayer.Interfaces;
+using Training_and_Workout_App.Domain.Models;
+
+namespace Training_and_Workout_App.API.Controllers;
+
+[ApiController]
+[Route("api/plancustomization")]
+[Authorize]
+public class PlanCustomizationController(IPlanCustomizationActions planCustomizationActions) : AppControllerBase
+{
+    // GET api/plancustomization?userId=1
+    [HttpGet]
+    public async Task<IActionResult> GetByUser([FromQuery] int userId)
+    {
+        var ownership = CheckOwnership(userId);
+        if (ownership is not null) return ownership;
+        return Ok(await planCustomizationActions.GetByUserAsync(userId));
+    }
+
+    // PUT api/plancustomization?userId=1
+    [HttpPut]
+    public async Task<IActionResult> Upsert([FromQuery] int userId, [FromBody] PlanCustomizationDto dto)
+    {
+        var ownership = CheckOwnership(userId);
+        if (ownership is not null) return ownership;
+        return Ok(await planCustomizationActions.UpsertAsync(userId, dto));
+    }
+}

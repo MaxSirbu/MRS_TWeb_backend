@@ -9,6 +9,11 @@ public class UserRegisterDto
     public string FullName { get; set; } = string.Empty;
 
     [Required]
+    [EmailAddress]
+    [StringLength(256)]
+    public string Username { get; set; } = string.Empty;   // email unic
+
+    [Required]
     [StringLength(256, MinimumLength = 8)]
     public string Password { get; set; } = string.Empty;
 }

@@ -8,5 +8,5 @@ public class DayPlanCreateDto
     [StringLength(50, MinimumLength = 1)]
     public string Label { get; set; } = string.Empty;
 
-    public List<Guid> ExerciseIds { get; set; } = [];
+    public List<int> ExerciseIds { get; set; } = [];
 }
