@@ -1,0 +1,11 @@
+﻿# Build output
+**/bin/
+**/obj/
+
+# Visual Studio
+**/.vs/
+*.user
+
+# Secrete locale
+**/appsettings.Development.json
+**/appsettings.Local.json
