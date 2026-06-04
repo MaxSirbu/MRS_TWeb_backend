@@ -13,6 +13,18 @@ public class UserProfileDto
     [Range(0, 150)]
     public int Age { get; set; }
 
+    [StringLength(20)]
+    public string Gender { get; set; } = string.Empty;
+
+    [Range(0.0, 200.0)]
+    public double Bmi { get; set; }
+
+    [Range(0.0, 10000.0)]
+    public double Bmr { get; set; }
+
+    [Range(0.0, 20000.0)]
+    public double Tdee { get; set; }
+
     public int Streak { get; set; }
 
     public DateOnly? LastActiveDate { get; set; }

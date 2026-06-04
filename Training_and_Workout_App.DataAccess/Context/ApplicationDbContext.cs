@@ -189,7 +189,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(day => day.Label).IsRequired().HasMaxLength(50);
 
             entity.HasOne(day => day.MealPlan)
-                  .WithMany()
+                  .WithMany(plan => plan.Days)
                   .HasForeignKey(day => day.MealPlanId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
@@ -240,6 +240,78 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                           c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                           c => c.ToList()))
                   .HasColumnType("nvarchar(max)");
+
+            entity.HasData(
+                new QuestionData
+                {
+                    Id = 1,
+                    Title = "What is your primary fitness goal?",
+                    Subtitle = "Choose the outcome you want your plan to optimize for.",
+                    Options = ["Weight Loss", "Muscle Gain", "Maintain Current Fitness Level", "Improve Endurance and Stamina"]
+                },
+                new QuestionData
+                {
+                    Id = 2,
+                    Title = "What is your fitness experience level?",
+                    Subtitle = "This helps tune difficulty, volume, and exercise complexity.",
+                    Options = ["Beginner (0-6 months)", "Intermediate (6 months - 2 years)", "Advanced (2-5 years)", "Expert (5+ years)"]
+                },
+                new QuestionData
+                {
+                    Id = 3,
+                    Title = "How many days per week can you work out?",
+                    Subtitle = "Your weekly availability shapes the plan schedule.",
+                    Options = ["2 days", "3 days", "4-5 days", "6-7 days"]
+                },
+                new QuestionData
+                {
+                    Id = 4,
+                    Title = "Where do you usually train?",
+                    Subtitle = "Your plan will adapt exercise selection to your training environment.",
+                    Options = ["At Home (No Equipment)", "At Home (With Equipment)", "Gym", "Both Home and Gym"]
+                },
+                new QuestionData
+                {
+                    Id = 5,
+                    Title = "How much time can you dedicate to each workout?",
+                    Subtitle = "Workout length controls how many movements and sets are prescribed.",
+                    Options = ["20-30 minutes", "30-45 minutes", "45-60 minutes", "More than 60 minutes"]
+                },
+                new QuestionData
+                {
+                    Id = 6,
+                    Title = "Personal Information",
+                    Subtitle = "Enter your data for BMI, BMR, TDEE, and nutrition calculations.",
+                    Options = []
+                },
+                new QuestionData
+                {
+                    Id = 7,
+                    Title = "What is your daily activity level?",
+                    Subtitle = "This multiplier is used for maintenance calorie calculations.",
+                    Options = ["Sedentary", "Lightly Active", "Moderately Active", "Very Active"]
+                },
+                new QuestionData
+                {
+                    Id = 8,
+                    Title = "What is your preferred diet type?",
+                    Subtitle = "Meal suggestions will follow this preference when possible.",
+                    Options = ["Omnivore", "Vegetarian", "Vegan", "Healthy Balanced Diet"]
+                },
+                new QuestionData
+                {
+                    Id = 9,
+                    Title = "How many meals would you like to eat per day?",
+                    Subtitle = "Calories will be split across this number of meals.",
+                    Options = ["3 meals", "4 meals", "5 meals", "6 or more meals"]
+                },
+                new QuestionData
+                {
+                    Id = 10,
+                    Title = "What is your nutrition priority?",
+                    Subtitle = "This determines the macronutrient distribution.",
+                    Options = ["Calorie Deficit (Fat Loss)", "Calorie Surplus (Muscle Gain)", "Balanced Nutrition", "Performance and Energy"]
+                });
         });
 
         // ── QuestionnaireEntry ───────────────────────────────────────────────
@@ -308,6 +380,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         {
             entity.HasKey(up => up.Id);
             entity.Property(up => up.AvatarUrl).HasMaxLength(500);
+            entity.Property(up => up.Gender).HasMaxLength(20);
 
             entity.HasOne(up => up.User)
                   .WithOne(u => u.UserProfile)

@@ -19,6 +19,10 @@ public class UserProfileActions(ApplicationDbContext context)
             Weight = profile.Weight,
             Height = profile.Height,
             Age = profile.Age,
+            Gender = profile.Gender,
+            Bmi = profile.Bmi,
+            Bmr = profile.Bmr,
+            Tdee = profile.Tdee,
             Streak = profile.Streak,
             LastActiveDate = profile.LastActiveDate,
             AvatarUrl = profile.AvatarUrl
@@ -36,6 +40,10 @@ public class UserProfileActions(ApplicationDbContext context)
             existing.Weight = dto.Weight;
             existing.Height = dto.Height;
             existing.Age = dto.Age;
+            existing.Gender = dto.Gender ?? existing.Gender;
+            existing.Bmi = dto.Bmi;
+            existing.Bmr = dto.Bmr;
+            existing.Tdee = dto.Tdee;
             existing.Streak = dto.Streak;
             existing.LastActiveDate = dto.LastActiveDate;
             existing.AvatarUrl = dto.AvatarUrl ?? existing.AvatarUrl;
@@ -48,6 +56,10 @@ public class UserProfileActions(ApplicationDbContext context)
                 Weight = dto.Weight,
                 Height = dto.Height,
                 Age = dto.Age,
+                Gender = dto.Gender ?? string.Empty,
+                Bmi = dto.Bmi,
+                Bmr = dto.Bmr,
+                Tdee = dto.Tdee,
                 Streak = dto.Streak,
                 LastActiveDate = dto.LastActiveDate,
                 AvatarUrl = dto.AvatarUrl ?? string.Empty,

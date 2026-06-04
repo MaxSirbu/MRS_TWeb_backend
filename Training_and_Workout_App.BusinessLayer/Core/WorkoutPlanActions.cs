@@ -11,6 +11,36 @@ namespace Training_and_Workout_App.BusinessLayer.Core;
 
 public class WorkoutPlanActions(ApplicationDbContext context)
 {
+    public async Task<List<WorkoutPlanSummaryDto>> GetSummariesByUserIdAsync(int userId)
+    {
+        return await context.WorkoutPlans
+            .AsNoTracking()
+            .Where(wp => wp.UserId == userId)
+            .OrderByDescending(wp => wp.UpdatedAt)
+            .Select(wp => new WorkoutPlanSummaryDto
+            {
+                Id = wp.Id,
+                UserId = wp.UserId,
+                Name = wp.Name,
+                CreatedAt = wp.CreatedAt,
+                UpdatedAt = wp.UpdatedAt,
+                DayCount = wp.Days.Count,
+                ExerciseCount = wp.Days.SelectMany(day => day.DayPlanExercises).Count(),
+                Days = wp.Days
+                    .OrderBy(day => day.DayNumber)
+                    .Select(day => new WorkoutPlanDaySummaryDto
+                    {
+                        DayNumber = day.DayNumber,
+                        ExerciseCount = day.DayPlanExercises.Count,
+                        TotalWeight = day.DayPlanExercises
+                            .SelectMany(dayExercise => dayExercise.Sets)
+                            .Sum(set => set.Weight * set.Reps)
+                    })
+                    .ToList()
+            })
+            .ToListAsync();
+    }
+
     public async Task<List<WorkoutPlanResponseDto>> GetByUserIdAsync(int userId)
     {
         return await context.WorkoutPlans

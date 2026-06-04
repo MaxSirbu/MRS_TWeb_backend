@@ -18,6 +18,14 @@ public class MealPlanController(IMealPlanAction mealPlanActions) : AppController
         return Ok(await mealPlanActions.GetByUserIdAsync(userId));
     }
 
+    [HttpGet("user/{userId}/summary")]
+    public async Task<IActionResult> GetSummariesByUser(int userId)
+    {
+        var ownership = CheckOwnership(userId);
+        if (ownership is not null) return ownership;
+        return Ok(await mealPlanActions.GetSummariesByUserIdAsync(userId));
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {

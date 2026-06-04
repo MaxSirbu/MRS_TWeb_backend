@@ -9,6 +9,55 @@ namespace Training_and_Workout_App.BusinessLayer.Core;
 
 public class MealPlanActions(ApplicationDbContext context)
 {
+    public async Task<List<MealPlanSummaryDto>> GetSummariesByUserIdAsync(int userId)
+    {
+        var plans = await context.MealPlans
+            .AsNoTracking()
+            .Where(mp => mp.UserId == userId)
+            .OrderByDescending(mp => mp.UpdatedAt)
+            .Select(mp => new MealPlanSummaryDto
+            {
+                Id = mp.Id,
+                UserId = mp.UserId,
+                Name = mp.Name,
+                UpdatedAt = mp.UpdatedAt,
+                Meals = mp.Meals,
+            })
+            .ToListAsync();
+
+        var planIds = plans.Select(plan => plan.Id).ToList();
+        var dayStats = await context.MealPlanDays
+            .AsNoTracking()
+            .Where(day => planIds.Contains(day.MealPlanId))
+            .Select(day => new
+            {
+                day.MealPlanId,
+                Kcal = day.Categories
+                    .SelectMany(category => category.Items)
+                    .Sum(item => item.Kcal)
+            })
+            .ToListAsync();
+
+        var statsByPlan = dayStats
+            .GroupBy(day => day.MealPlanId)
+            .ToDictionary(
+                group => group.Key,
+                group => new
+                {
+                    DayCount = group.Count(),
+                    KcalPerDay = group.Count() == 0 ? 0 : (int)Math.Round(group.Sum(day => day.Kcal) / group.Count())
+                });
+
+        foreach (var plan in plans)
+        {
+            if (!statsByPlan.TryGetValue(plan.Id, out var stats)) continue;
+            plan.DayCount = stats.DayCount;
+            plan.KcalPerDay = stats.KcalPerDay;
+        }
+
+        return plans;
+    }
+
     public async Task<List<MealPlanResponseDto>> GetByUserIdAsync(int userId)
     {
         var plans = await context.MealPlans

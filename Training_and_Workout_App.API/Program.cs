@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Training_and_Workout_App.BusinessLayer.Core;
 using Training_and_Workout_App.BusinessLayer.Interfaces;
 using Training_and_Workout_App.BusinessLayer.Structure;
 using Training_and_Workout_App.DataAccess.Extensions;
@@ -109,6 +110,8 @@ builder.Services.AddScoped<IPlanCustomizationAction, PlanCustomizationActionExec
 builder.Services.AddScoped<IUserPlanFavoriteAction, UserPlanFavoriteActionExecution>();
 builder.Services.AddScoped<IUserProfileAction, UserProfileActionExecution>();
 builder.Services.AddScoped<IWorkoutTrackingAction, WorkoutTrackingActionExecution>();
+builder.Services.AddScoped<IWorkoutPlanGenerator, WorkoutPlanGenerator>();
+builder.Services.AddScoped<INutritionPlanGenerator, NutritionPlanGenerator>();
 builder.Services.AddScoped<IQuestionnaireAction, QuestionnaireActionExecution>();
 builder.Services.AddScoped<IFaqAction, FaqActionExecution>();
 

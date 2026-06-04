@@ -41,4 +41,6 @@ public class MealPlanData
     // FK -> User
     public int UserId { get; set; }
     public UserData User { get; set; } = null!;
+
+    public ICollection<MealPlanDayData> Days { get; set; } = [];
 }

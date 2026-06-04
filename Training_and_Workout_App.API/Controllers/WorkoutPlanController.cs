@@ -19,6 +19,15 @@ public class WorkoutPlanController(IWorkoutPlanAction workoutPlanActions) : AppC
         return Ok(await workoutPlanActions.GetByUserIdAsync(userId));
     }
 
+    // GET /api/workoutplan/user/{userId}/summary
+    [HttpGet("user/{userId}/summary")]
+    public async Task<IActionResult> GetSummariesByUser(int userId)
+    {
+        var ownership = CheckOwnership(userId);
+        if (ownership is not null) return ownership;
+        return Ok(await workoutPlanActions.GetSummariesByUserIdAsync(userId));
+    }
+
     // GET /api/workoutplan/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)

@@ -4,7 +4,10 @@ using Training_and_Workout_App.DataAccess.Context;
 
 namespace Training_and_Workout_App.BusinessLayer.Structure;
 
-public class QuestionnaireActionExecution(ApplicationDbContext context)
-    : QuestionnaireActions(context), IQuestionnaireAction
+public class QuestionnaireActionExecution(
+    ApplicationDbContext context,
+    IWorkoutPlanGenerator workoutPlanGenerator,
+    INutritionPlanGenerator nutritionPlanGenerator)
+    : QuestionnaireActions(context, workoutPlanGenerator, nutritionPlanGenerator), IQuestionnaireAction
 {
 }
