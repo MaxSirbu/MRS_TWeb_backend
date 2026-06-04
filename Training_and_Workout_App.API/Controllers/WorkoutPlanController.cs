@@ -31,7 +31,11 @@ public class WorkoutPlanController(IWorkoutPlanAction workoutPlanActions) : AppC
     // GET /api/workoutplan/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
-        => Ok(await workoutPlanActions.GetByIdAsync(id));
+    {
+        var result = await workoutPlanActions.GetByIdAsync(id);
+        if (result is null) return NotFound();
+        return await ForOwnedUserAsync(result.UserId, () => Task.FromResult<IActionResult>(Ok(result)));
+    }
 
     // POST /api/workoutplan/user/{userId}
     [HttpPost("user/{userId}")]

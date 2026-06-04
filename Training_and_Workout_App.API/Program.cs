@@ -1,5 +1,5 @@
-using System.Text.Json.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -16,7 +16,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
-// ─── CORS ─────────────────────────────────────────────────────────────────────
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
     .Get<string[]>() ?? [];
@@ -29,11 +28,10 @@ builder.Services.AddCors(options =>
             .WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials();   // necesar pentru cookies / Authorization header
+            .AllowCredentials();
     });
 });
 
-// ─── Autentificare JWT Bearer ──────────────────────────────────────────────
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -45,7 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidAudience = builder.Configuration["Jwt:Audience"],
 
-            ValidateLifetime = true,   // verifica "exp" la fiecare request
+            ValidateLifetime = true,
 
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
@@ -56,7 +54,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 
-// ─── Swagger cu butonul "Authorize 🔒" ────────────────────────────────────
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -66,7 +63,6 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Documentatie Swagger pentru backend-ul aplicatiei."
     });
 
-    // Definim schema de securitate Bearer
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -77,7 +73,6 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Introdu token-ul JWT: Bearer &lt;token&gt;"
     });
 
-    // Aplicam schema la toate endpoint-urile
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -86,7 +81,7 @@ builder.Services.AddSwaggerGen(options =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id   = "Bearer"
+                    Id = "Bearer"
                 }
             },
             Array.Empty<string>()
@@ -96,8 +91,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDataAccess(builder.Configuration);
 
-// ─── BusinessLayer — inregistrare servicii ────────────────────────────────
-builder.Services.AddScoped<ITokenAction, TokenActionExecution>();   // JWT generation
+builder.Services.AddScoped<ITokenAction, TokenActionExecution>();
 builder.Services.AddScoped<IUserAction, UserActionExecution>();
 builder.Services.AddScoped<IExerciseAction, ExerciseActionExecution>();
 builder.Services.AddScoped<IWorkoutPlanAction, WorkoutPlanActionExecution>();
@@ -110,8 +104,8 @@ builder.Services.AddScoped<IPlanCustomizationAction, PlanCustomizationActionExec
 builder.Services.AddScoped<IUserPlanFavoriteAction, UserPlanFavoriteActionExecution>();
 builder.Services.AddScoped<IUserProfileAction, UserProfileActionExecution>();
 builder.Services.AddScoped<IWorkoutTrackingAction, WorkoutTrackingActionExecution>();
-builder.Services.AddScoped<IWorkoutPlanGenerator, WorkoutPlanGenerator>();
-builder.Services.AddScoped<INutritionPlanGenerator, NutritionPlanGenerator>();
+builder.Services.AddScoped<IWorkoutPlanService, WorkoutPlanService>();
+builder.Services.AddScoped<INutritionPlanService, NutritionPlanService>();
 builder.Services.AddScoped<IQuestionnaireAction, QuestionnaireActionExecution>();
 builder.Services.AddScoped<IFaqAction, FaqActionExecution>();
 
@@ -131,10 +125,9 @@ if (isDevelopment)
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// ─── Pipeline — ORDINEA CONTEAZA ──────────────────────────────────────────
-app.UseCors("FrontendPolicy");   // 0. CORS trebuie sa fie INAINTEA Auth!
-app.UseAuthentication();          // 1. Citeste token, populeaza HttpContext.User
-app.UseAuthorization();           // 2. Verifica [Authorize] si roluri
+app.UseCors("FrontendPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 app.MapGet("/", () =>
@@ -151,4 +144,3 @@ app.MapGet("/", () =>
 }).ExcludeFromDescription();
 
 app.Run();
-
