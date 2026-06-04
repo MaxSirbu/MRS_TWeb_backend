@@ -12,7 +12,6 @@ public class ExerciseCreateDto
     [Required]
     public MuscleGroup MuscleGroup { get; set; }
 
-    [Required]
     [StringLength(500)]
     public string GifUrl { get; set; } = string.Empty;
 

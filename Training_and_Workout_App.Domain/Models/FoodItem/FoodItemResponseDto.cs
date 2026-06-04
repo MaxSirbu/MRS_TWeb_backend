@@ -15,5 +15,6 @@ public class FoodItemResponseDto
     public string Category { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public MealItemType ItemType { get; set; }
+    public string? PreparationSteps { get; set; }
     public bool Recommended { get; set; }
 }

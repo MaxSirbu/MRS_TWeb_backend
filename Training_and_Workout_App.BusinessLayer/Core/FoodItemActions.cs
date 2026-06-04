@@ -33,20 +33,24 @@ public class FoodItemActions(ApplicationDbContext context)
 
     public async Task<FoodItemResponseDto> CreateAsync(FoodItemCreateDto dto)
     {
+        var normalizedName = dto.Name.Trim();
+        var hiddenItem = await context.FoodItems
+            .FirstOrDefaultAsync(f => f.Hidden && f.Name.ToLower() == normalizedName.ToLower());
+
+        if (hiddenItem is not null)
+        {
+            ApplyFoodItemDto(hiddenItem, dto, normalizedName);
+            hiddenItem.Hidden = false;
+
+            await context.SaveChangesAsync();
+            return MapToDto(hiddenItem);
+        }
+
         var item = new FoodItemData
         {
-            Name = dto.Name,
-            Kcal = dto.Kcal,
-            Protein = dto.Protein,
-            Carbs = dto.Carbs,
-            Fats = dto.Fats,
-            Grams = dto.Grams,
-            ImageUrl = dto.ImageUrl,
-            Category = dto.Category,
-            Description = dto.Description,
-            ItemType = dto.ItemType,
-            Recommended = dto.Recommended
+            Hidden = false
         };
+        ApplyFoodItemDto(item, dto, normalizedName);
 
         context.FoodItems.Add(item);
         await context.SaveChangesAsync();
@@ -58,17 +62,7 @@ public class FoodItemActions(ApplicationDbContext context)
         var item = await context.FoodItems.FindAsync(id)
             ?? throw new KeyNotFoundException($"FoodItem {id} not found.");
 
-        item.Name = dto.Name;
-        item.Kcal = dto.Kcal;
-        item.Protein = dto.Protein;
-        item.Carbs = dto.Carbs;
-        item.Fats = dto.Fats;
-        item.Grams = dto.Grams;
-        item.ImageUrl = dto.ImageUrl;
-        item.Category = dto.Category;
-        item.Description = dto.Description;
-        item.ItemType = dto.ItemType;
-        item.Recommended = dto.Recommended;
+        ApplyFoodItemDto(item, dto, dto.Name.Trim());
 
         await context.SaveChangesAsync();
         return MapToDto(item);
@@ -84,6 +78,24 @@ public class FoodItemActions(ApplicationDbContext context)
         return true;
     }
 
+    private static void ApplyFoodItemDto(FoodItemData item, FoodItemCreateDto dto, string name)
+    {
+        item.Name = name;
+        item.Kcal = dto.Kcal;
+        item.Protein = dto.Protein;
+        item.Carbs = dto.Carbs;
+        item.Fats = dto.Fats;
+        item.Grams = dto.Grams;
+        item.ImageUrl = dto.ImageUrl.Trim();
+        item.Category = dto.Category.Trim();
+        item.Description = dto.Description.Trim();
+        item.ItemType = dto.ItemType;
+        item.PreparationSteps = string.IsNullOrWhiteSpace(dto.PreparationSteps)
+            ? null
+            : dto.PreparationSteps.Trim();
+        item.Recommended = dto.Recommended;
+    }
+
     private static FoodItemResponseDto MapToDto(FoodItemData f) => new()
     {
         Id = f.Id,
@@ -97,6 +109,7 @@ public class FoodItemActions(ApplicationDbContext context)
         Category = f.Category,
         Description = f.Description,
         ItemType = f.ItemType,
+        PreparationSteps = f.PreparationSteps,
         Recommended = f.Recommended
     };
 }

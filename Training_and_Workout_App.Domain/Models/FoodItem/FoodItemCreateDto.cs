@@ -41,5 +41,8 @@ public class FoodItemCreateDto
 
     public MealItemType ItemType { get; set; }
 
+    [StringLength(5000)]
+    public string? PreparationSteps { get; set; }
+
     public bool Recommended { get; set; }
 }
