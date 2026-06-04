@@ -14,18 +14,18 @@ public class WorkoutPlanController(IWorkoutPlanAction workoutPlanActions) : AppC
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetByUser(int userId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await workoutPlanActions.GetByUserIdAsync(userId));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await workoutPlanActions.GetByUserIdAsync(userId)));
     }
 
     // GET /api/workoutplan/user/{userId}/summary
     [HttpGet("user/{userId}/summary")]
     public async Task<IActionResult> GetSummariesByUser(int userId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await workoutPlanActions.GetSummariesByUserIdAsync(userId));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await workoutPlanActions.GetSummariesByUserIdAsync(userId)));
     }
 
     // GET /api/workoutplan/{id}
@@ -37,9 +37,9 @@ public class WorkoutPlanController(IWorkoutPlanAction workoutPlanActions) : AppC
     [HttpPost("user/{userId}")]
     public async Task<IActionResult> Create(int userId, [FromBody] WorkoutPlanCreateDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await workoutPlanActions.CreateAsync(userId, dto));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await workoutPlanActions.CreateAsync(userId, dto)));
     }
 
     // PUT /api/workoutplan/{id}
@@ -48,9 +48,9 @@ public class WorkoutPlanController(IWorkoutPlanAction workoutPlanActions) : AppC
     {
         var plan = await workoutPlanActions.GetByIdAsync(id);
         if (plan is null) return NotFound();
-        var ownership = CheckOwnership(plan.UserId);
-        if (ownership is not null) return ownership;
-        return Ok(await workoutPlanActions.UpdateAsync(id, dto));
+        return await ForOwnedUserAsync(
+            plan.UserId,
+            async () => Ok(await workoutPlanActions.UpdateAsync(id, dto)));
     }
 
     // DELETE /api/workoutplan/{id}
@@ -59,10 +59,8 @@ public class WorkoutPlanController(IWorkoutPlanAction workoutPlanActions) : AppC
     {
         var plan = await workoutPlanActions.GetByIdAsync(id);
         if (plan is null) return NotFound();
-        var ownership = CheckOwnership(plan.UserId);
-        if (ownership is not null) return ownership;
-        var deleted = await workoutPlanActions.DeleteAsync(id);
-        if (!deleted) return NotFound();
-        return NoContent();
+        return await ForOwnedUserAsync(
+            plan.UserId,
+            async () => NoContentOrNotFound(await workoutPlanActions.DeleteAsync(id)));
     }
 }

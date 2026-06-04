@@ -15,39 +15,37 @@ public class PlanActivationController(IPlanActivationAction planActivationAction
     [HttpGet("active")]
     public async Task<IActionResult> GetActive([FromQuery] int userId, [FromQuery] PlanType planType)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        var result = await planActivationActions.GetActiveAsync(userId, planType);
-        if (result is null) return NotFound();
-        return Ok(result);
+        return await ForOwnedUserAsync(userId, async () =>
+        {
+            var result = await planActivationActions.GetActiveAsync(userId, planType);
+            return result is null ? NotFound() : Ok(result);
+        });
     }
 
     // POST api/planactivation?userId=1
     [HttpPost]
     public async Task<IActionResult> Activate([FromQuery] int userId, [FromBody] PlanActivationCreateDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await planActivationActions.ActivateAsync(userId, dto));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await planActivationActions.ActivateAsync(userId, dto)));
     }
 
     // DELETE api/planactivation?userId=1&planType=Workout
     [HttpDelete]
     public async Task<IActionResult> Deactivate([FromQuery] int userId, [FromQuery] PlanType planType)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        var deleted = await planActivationActions.DeactivateAsync(userId, planType);
-        if (!deleted) return NotFound();
-        return NoContent();
+        return await ForOwnedUserAsync(
+            userId,
+            async () => NoContentOrNotFound(await planActivationActions.DeactivateAsync(userId, planType)));
     }
 
     // POST api/planactivation/reset-cycle?userId=1&planType=Meal
     [HttpPost("reset-cycle")]
     public async Task<IActionResult> ResetCycle([FromQuery] int userId, [FromQuery] PlanType planType)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await planActivationActions.ResetCycleAsync(userId, planType));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await planActivationActions.ResetCycleAsync(userId, planType)));
     }
 }

@@ -21,26 +21,26 @@ public class QuestionnaireController(IQuestionnaireAction questionnaireActions) 
     [HttpGet("entries")]
     public async Task<IActionResult> GetEntries([FromQuery] int userId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await questionnaireActions.GetEntriesByUserAsync(userId));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await questionnaireActions.GetEntriesByUserAsync(userId)));
     }
 
     // POST api/questionnaire/submit?userId=1
     [HttpPost("submit")]
     public async Task<IActionResult> Submit([FromQuery] int userId, [FromBody] QuestionnaireEntryCreateDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await questionnaireActions.SubmitAnswerAsync(userId, dto));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await questionnaireActions.SubmitAnswerAsync(userId, dto)));
     }
 
     // POST api/questionnaire/complete?userId=1
     [HttpPost("complete")]
     public async Task<IActionResult> Complete([FromQuery] int userId, [FromBody] QuestionnaireCompleteDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await questionnaireActions.CompleteAsync(userId, dto));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await questionnaireActions.CompleteAsync(userId, dto)));
     }
 }

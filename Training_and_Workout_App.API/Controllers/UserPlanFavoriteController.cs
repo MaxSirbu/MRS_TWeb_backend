@@ -15,18 +15,18 @@ public class UserPlanFavoriteController(IUserPlanFavoriteAction favoritesActions
     [HttpGet]
     public async Task<IActionResult> GetByUser([FromQuery] int userId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await favoritesActions.GetByUserAsync(userId));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await favoritesActions.GetByUserAsync(userId)));
     }
 
     // POST api/userplanfavorite?userId=1
     [HttpPost]
     public async Task<IActionResult> Add([FromQuery] int userId, [FromBody] UserPlanFavoriteDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await favoritesActions.AddAsync(userId, dto));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await favoritesActions.AddAsync(userId, dto)));
     }
 
     // DELETE api/userplanfavorite?userId=1&planType=Workout&planIdentifier=plan-push
@@ -36,10 +36,9 @@ public class UserPlanFavoriteController(IUserPlanFavoriteAction favoritesActions
         [FromQuery] PlanType planType,
         [FromQuery] string planIdentifier)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        var deleted = await favoritesActions.RemoveAsync(userId, planType, planIdentifier);
-        if (!deleted) return NotFound();
-        return NoContent();
+        return await ForOwnedUserAsync(
+            userId,
+            async () => NoContentOrNotFound(
+                await favoritesActions.RemoveAsync(userId, planType, planIdentifier)));
     }
 }

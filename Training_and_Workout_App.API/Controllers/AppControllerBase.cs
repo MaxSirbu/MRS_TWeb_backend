@@ -36,4 +36,17 @@ public abstract class AppControllerBase : ControllerBase
             return Forbid();
         return null;
     }
+
+    protected async Task<IActionResult> ForOwnedUserAsync(
+        int resourceUserId,
+        Func<Task<IActionResult>> action)
+    {
+        var ownership = CheckOwnership(resourceUserId);
+        return ownership ?? await action();
+    }
+
+    protected IActionResult NoContentOrNotFound(bool deleted)
+    {
+        return deleted ? NoContent() : NotFound();
+    }
 }

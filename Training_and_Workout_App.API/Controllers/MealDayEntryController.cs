@@ -17,9 +17,9 @@ public class MealDayEntryController(IMealDayEntryAction mealDayEntryActions) : A
         [FromQuery] string mealPlanIdentifier,
         [FromQuery] string dayId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await mealDayEntryActions.GetByUserAndDayAsync(userId, mealPlanIdentifier, dayId));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await mealDayEntryActions.GetByUserAndDayAsync(userId, mealPlanIdentifier, dayId)));
     }
 
     // PUT api/mealdayentry?userId=1
@@ -28,19 +28,17 @@ public class MealDayEntryController(IMealDayEntryAction mealDayEntryActions) : A
         [FromQuery] int userId,
         [FromBody] MealDayEntryCreateDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await mealDayEntryActions.UpsertAsync(userId, dto));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await mealDayEntryActions.UpsertAsync(userId, dto)));
     }
 
     // DELETE api/mealdayentry/5?userId=1
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id, [FromQuery] int userId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        var deleted = await mealDayEntryActions.DeleteAsync(id, userId);
-        if (!deleted) return NotFound();
-        return NoContent();
+        return await ForOwnedUserAsync(
+            userId,
+            async () => NoContentOrNotFound(await mealDayEntryActions.DeleteAsync(id, userId)));
     }
 }

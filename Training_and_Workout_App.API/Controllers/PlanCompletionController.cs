@@ -17,9 +17,9 @@ public class PlanCompletionController(IPlanCompletionAction planCompletionAction
         [FromQuery] int userId,
         [FromQuery] PlanType? planType = null)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await planCompletionActions.GetByUserAsync(userId, planType));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await planCompletionActions.GetByUserAsync(userId, planType)));
     }
 
     // POST api/plancompletion?userId=1
@@ -28,9 +28,9 @@ public class PlanCompletionController(IPlanCompletionAction planCompletionAction
         [FromQuery] int userId,
         [FromBody] PlanCompletionCreateDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await planCompletionActions.MarkCompleteAsync(userId, dto));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await planCompletionActions.MarkCompleteAsync(userId, dto)));
     }
 
     // DELETE api/plancompletion?userId=1&dayToken=...&dateKey=2025-01-01
@@ -40,10 +40,8 @@ public class PlanCompletionController(IPlanCompletionAction planCompletionAction
         [FromQuery] string dayToken,
         [FromQuery] DateOnly dateKey)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        var deleted = await planCompletionActions.UnmarkAsync(userId, dayToken, dateKey);
-        if (!deleted) return NotFound();
-        return NoContent();
+        return await ForOwnedUserAsync(
+            userId,
+            async () => NoContentOrNotFound(await planCompletionActions.UnmarkAsync(userId, dayToken, dateKey)));
     }
 }

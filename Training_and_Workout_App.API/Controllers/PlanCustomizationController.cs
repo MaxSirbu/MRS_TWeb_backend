@@ -14,17 +14,17 @@ public class PlanCustomizationController(IPlanCustomizationAction planCustomizat
     [HttpGet]
     public async Task<IActionResult> GetByUser([FromQuery] int userId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await planCustomizationActions.GetByUserAsync(userId));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await planCustomizationActions.GetByUserAsync(userId)));
     }
 
     // PUT api/plancustomization?userId=1
     [HttpPut]
     public async Task<IActionResult> Upsert([FromQuery] int userId, [FromBody] PlanCustomizationDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await planCustomizationActions.UpsertAsync(userId, dto));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await planCustomizationActions.UpsertAsync(userId, dto)));
     }
 }

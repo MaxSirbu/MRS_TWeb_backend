@@ -13,17 +13,17 @@ public class MealPlanController(IMealPlanAction mealPlanActions) : AppController
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetByUser(int userId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await mealPlanActions.GetByUserIdAsync(userId));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await mealPlanActions.GetByUserIdAsync(userId)));
     }
 
     [HttpGet("user/{userId}/summary")]
     public async Task<IActionResult> GetSummariesByUser(int userId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await mealPlanActions.GetSummariesByUserIdAsync(userId));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await mealPlanActions.GetSummariesByUserIdAsync(userId)));
     }
 
     [HttpGet("{id}")]
@@ -31,17 +31,15 @@ public class MealPlanController(IMealPlanAction mealPlanActions) : AppController
     {
         var result = await mealPlanActions.GetByIdAsync(id);
         if (result is null) return NotFound();
-        var ownership = CheckOwnership(result.UserId);
-        if (ownership is not null) return ownership;
-        return Ok(result);
+        return await ForOwnedUserAsync(result.UserId, () => Task.FromResult<IActionResult>(Ok(result)));
     }
 
     [HttpPost("user/{userId}")]
     public async Task<IActionResult> Create(int userId, [FromBody] MealPlanCreateDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        return Ok(await mealPlanActions.CreateAsync(userId, dto));
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await mealPlanActions.CreateAsync(userId, dto)));
     }
 
     [HttpPut("{id}")]
@@ -49,9 +47,9 @@ public class MealPlanController(IMealPlanAction mealPlanActions) : AppController
     {
         var plan = await mealPlanActions.GetByIdAsync(id);
         if (plan is null) return NotFound();
-        var ownership = CheckOwnership(plan.UserId);
-        if (ownership is not null) return ownership;
-        return Ok(await mealPlanActions.UpdateAsync(id, dto));
+        return await ForOwnedUserAsync(
+            plan.UserId,
+            async () => Ok(await mealPlanActions.UpdateAsync(id, dto)));
     }
 
     [HttpPut("item/{itemId}/quantity")]
@@ -67,10 +65,8 @@ public class MealPlanController(IMealPlanAction mealPlanActions) : AppController
     {
         var plan = await mealPlanActions.GetByIdAsync(id);
         if (plan is null) return NotFound();
-        var ownership = CheckOwnership(plan.UserId);
-        if (ownership is not null) return ownership;
-        var deleted = await mealPlanActions.DeleteAsync(id);
-        if (!deleted) return NotFound();
-        return NoContent();
+        return await ForOwnedUserAsync(
+            plan.UserId,
+            async () => NoContentOrNotFound(await mealPlanActions.DeleteAsync(id)));
     }
 }

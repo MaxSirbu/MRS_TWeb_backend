@@ -13,19 +13,18 @@ public class UserProfileController(IUserProfileAction profileActions) : AppContr
     [HttpGet]
     public async Task<IActionResult> Get(int userId)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        var result = await profileActions.GetByUserIdAsync(userId);
-        if (result is null) return NotFound();
-        return Ok(result);
+        return await ForOwnedUserAsync(userId, async () =>
+        {
+            var result = await profileActions.GetByUserIdAsync(userId);
+            return result is null ? NotFound() : Ok(result);
+        });
     }
 
     [HttpPut]
     public async Task<IActionResult> Upsert(int userId, [FromBody] UserProfileDto dto)
     {
-        var ownership = CheckOwnership(userId);
-        if (ownership is not null) return ownership;
-        var result = await profileActions.UpsertAsync(userId, dto);
-        return Ok(result);
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await profileActions.UpsertAsync(userId, dto)));
     }
 }
