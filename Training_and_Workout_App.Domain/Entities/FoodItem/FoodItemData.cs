@@ -43,6 +43,9 @@ public class FoodItemData
 
     public MealItemType ItemType { get; set; }
 
+    [StringLength(5000)]
+    public string? PreparationSteps { get; set; }
+
     public bool Recommended { get; set; }
 
     public bool Hidden { get; set; }
