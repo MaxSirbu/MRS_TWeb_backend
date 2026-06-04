@@ -3,7 +3,7 @@ using Training_and_Workout_App.Domain.Models.Questionnaire;
 
 namespace Training_and_Workout_App.BusinessLayer.Interfaces;
 
-public interface INutritionPlanGenerator
+public interface INutritionPlanService
 {
     Task<NutritionGenerationResult> GenerateAsync(
         int userId,

@@ -10,8 +10,8 @@ namespace Training_and_Workout_App.BusinessLayer.Core;
 
 public class QuestionnaireActions(
     ApplicationDbContext context,
-    IWorkoutPlanGenerator workoutPlanGenerator,
-    INutritionPlanGenerator nutritionPlanGenerator)
+    IWorkoutPlanService workoutPlanService,
+    INutritionPlanService nutritionPlanService)
 {
     public async Task<List<QuestionResponseDto>> GetAllQuestionsAsync()
     {
@@ -112,8 +112,8 @@ public class QuestionnaireActions(
 
         await context.SaveChangesAsync();
 
-        var nutrition = await nutritionPlanGenerator.GenerateAsync(userId, answers);
-        var workout = await workoutPlanGenerator.GenerateAsync(userId, answers);
+        var nutrition = await nutritionPlanService.GenerateAsync(userId, answers);
+        var workout = await workoutPlanService.GenerateAsync(userId, answers);
 
         return new QuestionnaireCompleteResponseDto
         {

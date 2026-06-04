@@ -31,7 +31,6 @@ public class PlanCustomizationActions(ApplicationDbContext context)
 
         if (existing is not null)
         {
-            // Actualizează câmpurile existente
             existing.ColorId = dto.ColorId;
             existing.ImageUrl = dto.ImageUrl;
         }

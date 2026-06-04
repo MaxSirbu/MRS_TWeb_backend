@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Training_and_Workout_App.BusinessLayer.Core;
 
-public class WorkoutPlanGenerator(ApplicationDbContext context) : IWorkoutPlanGenerator
+public class WorkoutPlanService(ApplicationDbContext context) : IWorkoutPlanService
 {
     private const string GeneratedPlanName = "Personalized Workout Plan";
 
@@ -47,16 +47,25 @@ public class WorkoutPlanGenerator(ApplicationDbContext context) : IWorkoutPlanGe
         var template = TemplateFor(goal, workoutDays);
         var setScheme = SetScheme(experience);
 
-        for (var dayIndex = 0; dayIndex < workoutDays; dayIndex++)
+        var workoutDayNumbers = WorkoutDayNumbers(workoutDays);
+        var workoutIndex = 0;
+
+        for (var dayNumber = 1; dayNumber <= 7; dayNumber++)
         {
-            var focus = template[dayIndex % template.Count];
             var day = new DayPlanData
             {
-                DayNumber = dayIndex + 1,
-                Label = $"Day {dayIndex + 1}: {focus.Label}",
-                IsRestDay = false
+                DayNumber = dayNumber,
+                Label = $"Day {dayNumber}",
+                IsRestDay = !workoutDayNumbers.Contains(dayNumber)
             };
 
+            if (day.IsRestDay)
+            {
+                plan.Days.Add(day);
+                continue;
+            }
+
+            var focus = template[workoutIndex % template.Count];
             var selected = SelectExercises(exercises, focus.Groups, location, exercisesPerDay);
             var order = 0;
             foreach (var exercise in selected)
@@ -86,6 +95,7 @@ public class WorkoutPlanGenerator(ApplicationDbContext context) : IWorkoutPlanGe
             }
 
             plan.Days.Add(day);
+            workoutIndex++;
         }
 
         context.WorkoutPlans.Add(plan);
@@ -105,6 +115,15 @@ public class WorkoutPlanGenerator(ApplicationDbContext context) : IWorkoutPlanGe
         "4-5 days" => 5,
         "6-7 days" => 6,
         _ => 3
+    };
+
+    private static HashSet<int> WorkoutDayNumbers(int workoutDays) => workoutDays switch
+    {
+        2 => [1, 4],
+        3 => [1, 3, 5],
+        5 => [1, 2, 3, 5, 6],
+        6 => [1, 2, 3, 4, 5, 6],
+        _ => [1, 3, 5]
     };
 
     private static int ExercisesPerDay(string duration) => duration switch

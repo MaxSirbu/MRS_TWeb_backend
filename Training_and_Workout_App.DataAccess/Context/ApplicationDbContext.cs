@@ -49,7 +49,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         base.OnModelCreating(modelBuilder);
 
-        // ── User ────────────────────────────────────────────────────────────
         modelBuilder.Entity<UserData>(entity =>
         {
             entity.HasKey(u => u.Id);
@@ -60,7 +59,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(u => u.Role).HasConversion<string>().HasMaxLength(20);
         });
 
-        // ── Exercise ─────────────────────────────────────────────────────────
         modelBuilder.Entity<ExerciseData>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -70,7 +68,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(e => e.MuscleGroup).HasConversion<string>().HasMaxLength(20);
         });
 
-        // ── WorkoutPlan ──────────────────────────────────────────────────────
         modelBuilder.Entity<WorkoutPlanData>(entity =>
         {
             entity.HasKey(wp => wp.Id);
@@ -91,7 +88,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── DayPlan ──────────────────────────────────────────────────────────
         modelBuilder.Entity<DayPlanData>(entity =>
         {
             entity.HasKey(dp => dp.Id);
@@ -106,7 +102,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── DayPlanExercise (junction) ───────────────────────────────────────
         modelBuilder.Entity<DayPlanExerciseData>(entity =>
         {
             entity.HasKey(dpe => new { dpe.DayPlanId, dpe.ExerciseId });
@@ -129,7 +124,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(dpe => dpe.Order).HasDefaultValue(0);
         });
 
-        // ── WorkoutTrackingState ─────────────────────────────────────────────
         modelBuilder.Entity<WorkoutTrackingStateData>(entity =>
         {
             entity.HasKey(wt => wt.Id);
@@ -141,7 +135,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── WorkoutSet ───────────────────────────────────────────────────────
         modelBuilder.Entity<WorkoutSetData>(entity =>
         {
             entity.HasKey(ws => ws.Id);
@@ -159,7 +152,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(ws => ws.Order).HasDefaultValue(0);
         });
 
-        // ── PauseTime ────────────────────────────────────────────────────────
         modelBuilder.Entity<PauseTimeData>(entity =>
         {
             entity.HasKey(pt => pt.Id);
@@ -168,7 +160,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .HasFilter("[DayPlanId] IS NOT NULL AND [ExerciseId] IS NOT NULL");
         });
 
-        // ── MealPlan ─────────────────────────────────────────────────────────
         modelBuilder.Entity<MealPlanData>(entity =>
         {
             entity.HasKey(mp => mp.Id);
@@ -223,7 +214,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ── Question ─────────────────────────────────────────────────────────
         modelBuilder.Entity<QuestionData>(entity =>
         {
             entity.HasKey(q => q.Id);
@@ -281,7 +271,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 {
                     Id = 6,
                     Title = "Personal Information",
-                    Subtitle = "Enter your data for BMI, BMR, TDEE, and nutrition calculations.",
+                    Subtitle = "Tell us the basics so we can tailor your plans.",
                     Options = []
                 },
                 new QuestionData
@@ -314,7 +304,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 });
         });
 
-        // ── QuestionnaireEntry ───────────────────────────────────────────────
         modelBuilder.Entity<QuestionnaireEntryData>(entity =>
         {
             entity.HasKey(qe => qe.Id);
@@ -364,7 +353,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── FoodItem ─────────────────────────────────────────────────────────
         modelBuilder.Entity<FoodItemData>(entity =>
         {
             entity.HasKey(f => f.Id);
@@ -375,7 +363,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(f => f.ItemType).HasConversion<string>().HasMaxLength(20);
         });
 
-        // ── UserProfile ──────────────────────────────────────────────────────
         modelBuilder.Entity<UserProfileData>(entity =>
         {
             entity.HasKey(up => up.Id);
@@ -388,7 +375,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── PlanActivation ───────────────────────────────────────────────────
         modelBuilder.Entity<PlanActivationData>(entity =>
         {
             entity.HasKey(pa => pa.Id);
@@ -401,7 +387,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── PlanCompletion ───────────────────────────────────────────────────
         modelBuilder.Entity<PlanCompletionData>(entity =>
         {
             entity.HasKey(pc => pc.Id);
@@ -414,7 +399,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── PlanCustomization ────────────────────────────────────────────────
         modelBuilder.Entity<PlanCustomizationData>(entity =>
         {
             entity.HasKey(pc => pc.Id);
@@ -429,7 +413,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── UserPlanFavorite ─────────────────────────────────────────────────
         modelBuilder.Entity<UserPlanFavoriteData>(entity =>
         {
             entity.HasKey(f => f.Id);
@@ -442,7 +425,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── MealDayEntry ─────────────────────────────────────────────────────
         modelBuilder.Entity<MealDayEntryData>(entity =>
         {
             entity.HasKey(m => m.Id);
@@ -456,7 +438,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ── MealDayEntryFoodItem (junction) ──────────────────────────────────
         modelBuilder.Entity<MealDayEntryFoodItemData>(entity =>
         {
             entity.HasKey(mf => new { mf.MealDayEntryId, mf.FoodItemId });

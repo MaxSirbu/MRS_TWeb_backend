@@ -1,10 +1,10 @@
-using Training_and_Workout_App.BusinessLayer.Interfaces;
-using Training_and_Workout_App.Domain.Entities.User;
-using Training_and_Workout_App.Domain.Models.User;
-using Training_and_Workout_App.DataAccess.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Training_and_Workout_App.BusinessLayer.Interfaces;
+using Training_and_Workout_App.DataAccess.Context;
+using Training_and_Workout_App.Domain.Entities.User;
+using Training_and_Workout_App.Domain.Models.User;
 
 namespace Training_and_Workout_App.BusinessLayer.Core;
 
@@ -19,7 +19,6 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
             FullName = dto.FullName,
             Username = dto.Username,
         };
-        // Hash parola inainte de salvare — nu se stocheaza niciodata in plaintext
         user.Password = _hasher.HashPassword(user, dto.Password);
 
         context.Users.Add(user);
@@ -36,7 +35,6 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         if (user is null)
             throw new UnauthorizedAccessException("Invalid credentials");
 
-        // Verifica parola fata de hash-ul stocat in DB
         var verification = _hasher.VerifyHashedPassword(user, user.Password, dto.Password);
         if (verification == PasswordVerificationResult.Failed)
             throw new UnauthorizedAccessException("Invalid credentials");
@@ -70,7 +68,6 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
     }
 
-    // ── Pasul 2: update date proprii ──────────────────────────────────────────
     public async Task<UserResponseDto?> UpdateMeAsync(int userId, UserUpdateDto dto)
     {
         var user = await context.Users.FindAsync(userId);
@@ -85,7 +82,6 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
     }
 
-    // ── Pasul 3: admin — listare toti userii ──────────────────────────────────
     public async Task<List<UserAdminResponseDto>> GetAllAsync()
     {
         return await context.Users
@@ -101,7 +97,6 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
             .ToListAsync();
     }
 
-    // ── Pasul 3: admin — schimbare rol ────────────────────────────────────────
     public async Task<UserAdminResponseDto?> SetRoleAsync(int id, SetRoleDto dto)
     {
         var user = await context.Users.FindAsync(id);
@@ -121,7 +116,6 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         };
     }
 
-    // ── Pasul 3: admin — toggle blocare ───────────────────────────────────────
     public async Task<UserAdminResponseDto?> ToggleBlockedAsync(int id)
     {
         var user = await context.Users.FindAsync(id);
@@ -139,7 +133,6 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         };
     }
 
-    // ── Pasul 3: admin — stergere user ────────────────────────────────────────
     public async Task<bool> DeleteAsync(int id)
     {
         var user = await context.Users.FindAsync(id);

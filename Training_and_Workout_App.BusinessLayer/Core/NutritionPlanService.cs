@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Training_and_Workout_App.BusinessLayer.Core;
 
-public class NutritionPlanGenerator(ApplicationDbContext context) : INutritionPlanGenerator
+public class NutritionPlanService(ApplicationDbContext context) : INutritionPlanService
 {
     private const string GeneratedPlanName = "Personalized Nutrition Plan";
 
@@ -60,7 +60,7 @@ public class NutritionPlanGenerator(ApplicationDbContext context) : INutritionPl
         var foods = await SelectFoodsAsync(dietType);
         for (var dayNumber = 1; dayNumber <= 7; dayNumber++)
         {
-            plan.Days.Add(CreateDay(dayNumber, mealsPerDay, calories, macroSplit, foods));
+            plan.Days.Add(CreateDay(dayNumber, mealsPerDay, calories, macroSplit, foods, dietType));
         }
 
         context.MealPlans.Add(plan);
@@ -137,7 +137,8 @@ public class NutritionPlanGenerator(ApplicationDbContext context) : INutritionPl
         int mealsPerDay,
         int calories,
         MacroSplit macroSplit,
-        IReadOnlyList<FoodItemData> foods)
+        IReadOnlyList<FoodItemData> foods,
+        string dietType)
     {
         var day = new MealPlanDayData
         {
@@ -150,13 +151,14 @@ public class NutritionPlanGenerator(ApplicationDbContext context) : INutritionPl
         var caloriesPerMeal = calories / (double)mealsPerDay;
         for (var index = 0; index < mealsPerDay; index++)
         {
-            var food = foods[(dayNumber + index - 1) % foods.Count];
+            var slot = SlotFor(index, mealsPerDay);
+            var food = SelectFoodForSlot(foods, slot, dayNumber, index, dietType);
             var quantity = Math.Clamp(caloriesPerMeal / Math.Max(food.Kcal, 1) * Math.Max(food.Grams, 1), 60, 550);
             var multiplier = quantity / Math.Max(food.Grams, 1);
 
             var category = new MealCategoryData
             {
-                Slot = SlotFor(index, mealsPerDay),
+                Slot = slot,
                 Order = index
             };
 
@@ -175,6 +177,61 @@ public class NutritionPlanGenerator(ApplicationDbContext context) : INutritionPl
         }
 
         return day;
+    }
+
+    private static FoodItemData SelectFoodForSlot(
+        IReadOnlyList<FoodItemData> foods,
+        MealSlot slot,
+        int dayNumber,
+        int mealIndex,
+        string dietType)
+    {
+        var keywords = KeywordsFor(slot, dietType);
+        var matches = foods
+            .Where(food => ContainsAny(food, keywords))
+            .ToList();
+
+        var pool = matches.Count > 0 ? matches : SlotFallback(foods, slot);
+        if (pool.Count == 0) pool = foods.ToList();
+
+        return pool[(dayNumber + mealIndex - 1) % pool.Count];
+    }
+
+    private static List<FoodItemData> SlotFallback(IReadOnlyList<FoodItemData> foods, MealSlot slot)
+    {
+        var fallbackKeywords = slot switch
+        {
+            MealSlot.Breakfast => new[] { "oat", "egg", "yogurt", "fruit", "banana", "cereal", "milk", "toast" },
+            MealSlot.Lunch => new[] { "salad", "rice", "pasta", "soup", "wrap", "bowl", "beans", "chicken", "fish" },
+            MealSlot.Snacks => new[] { "fruit", "nuts", "bar", "smoothie", "yogurt", "banana", "apple" },
+            MealSlot.Dinner => new[] { "chicken", "fish", "rice", "potato", "vegetable", "beef", "tofu", "salmon" },
+            _ => Array.Empty<string>()
+        };
+
+        return foods.Where(food => ContainsAny(food, fallbackKeywords)).ToList();
+    }
+
+    private static string[] KeywordsFor(MealSlot slot, string dietType)
+    {
+        var isVegan = dietType == "Vegan";
+        var isVegetarian = dietType is "Vegetarian" or "Vegan";
+
+        return slot switch
+        {
+            MealSlot.Breakfast when isVegan => ["oat", "banana", "berries", "chia", "smoothie", "toast", "avocado", "cereal"],
+            MealSlot.Breakfast when isVegetarian => ["oat", "egg", "yogurt", "banana", "berries", "toast", "cereal", "milk"],
+            MealSlot.Breakfast => ["oat", "egg", "yogurt", "banana", "berries", "toast", "cereal", "milk"],
+            MealSlot.Lunch when isVegan => ["lentil", "bean", "chickpea", "tofu", "rice", "quinoa", "salad", "wrap", "bowl"],
+            MealSlot.Lunch when isVegetarian => ["lentil", "bean", "chickpea", "tofu", "rice", "quinoa", "salad", "wrap", "pasta", "bowl"],
+            MealSlot.Lunch => ["chicken", "turkey", "fish", "rice", "pasta", "salad", "wrap", "soup", "bowl"],
+            MealSlot.Snacks when isVegan => ["fruit", "nuts", "banana", "apple", "smoothie", "chia", "hummus", "bar"],
+            MealSlot.Snacks when isVegetarian => ["fruit", "nuts", "yogurt", "banana", "apple", "smoothie", "bar", "hummus"],
+            MealSlot.Snacks => ["fruit", "nuts", "yogurt", "banana", "apple", "smoothie", "bar"],
+            MealSlot.Dinner when isVegan => ["tofu", "lentil", "bean", "chickpea", "vegetable", "rice", "quinoa", "potato"],
+            MealSlot.Dinner when isVegetarian => ["tofu", "lentil", "bean", "chickpea", "vegetable", "rice", "quinoa", "pasta", "potato"],
+            MealSlot.Dinner => ["chicken", "fish", "salmon", "beef", "rice", "potato", "vegetable", "pasta"],
+            _ => []
+        };
     }
 
     private static string Answer(IReadOnlyDictionary<int, QuestionnaireAnswerDto> answers, int questionId)

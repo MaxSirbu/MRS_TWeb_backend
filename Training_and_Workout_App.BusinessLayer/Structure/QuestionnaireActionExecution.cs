@@ -6,8 +6,8 @@ namespace Training_and_Workout_App.BusinessLayer.Structure;
 
 public class QuestionnaireActionExecution(
     ApplicationDbContext context,
-    IWorkoutPlanGenerator workoutPlanGenerator,
-    INutritionPlanGenerator nutritionPlanGenerator)
-    : QuestionnaireActions(context, workoutPlanGenerator, nutritionPlanGenerator), IQuestionnaireAction
+    IWorkoutPlanService workoutPlanService,
+    INutritionPlanService nutritionPlanService)
+    : QuestionnaireActions(context, workoutPlanService, nutritionPlanService), IQuestionnaireAction
 {
 }

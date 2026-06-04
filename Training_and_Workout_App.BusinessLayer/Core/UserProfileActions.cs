@@ -36,7 +36,6 @@ public class UserProfileActions(ApplicationDbContext context)
 
         if (existing is not null)
         {
-            // UPDATE — actualizează câmpurile profilului existent
             existing.Weight = dto.Weight;
             existing.Height = dto.Height;
             existing.Age = dto.Age;
