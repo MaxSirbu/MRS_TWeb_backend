@@ -27,4 +27,12 @@ public class UserProfileController(IUserProfileAction profileActions) : AppContr
             userId,
             async () => Ok(await profileActions.UpsertAsync(userId, dto)));
     }
+
+    [HttpGet("weight-history")]
+    public async Task<IActionResult> GetWeightHistory(int userId)
+    {
+        return await ForOwnedUserAsync(
+            userId,
+            async () => Ok(await profileActions.GetWeightHistoryAsync(userId)));
+    }
 }

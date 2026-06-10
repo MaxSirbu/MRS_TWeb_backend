@@ -23,6 +23,9 @@ public class ExerciseData
     [StringLength(2000, MinimumLength = 1)]
     public string Instructions { get; set; } = string.Empty;
 
+    [Range(1.0, 20.0)]
+    public double MetValue { get; set; } = 5.0;
+
     // Vizibilitate - folosit in panoul admin (AdminExercises.tsx)
     public bool Recommended { get; set; }
 

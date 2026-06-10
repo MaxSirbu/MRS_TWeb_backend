@@ -212,7 +212,8 @@ public class WorkoutPlanActions(ApplicationDbContext context)
                         Name = dpe.Exercise.Name,
                         MuscleGroup = dpe.Exercise.MuscleGroup,
                         GifUrl = dpe.Exercise.GifUrl,
-                        Instructions = dpe.Exercise.Instructions
+                        Instructions = dpe.Exercise.Instructions,
+                        MetValue = dpe.Exercise.MetValue
                     }).ToList(),
                 DayExercises = d.DayPlanExercises
                     .OrderBy(dpe => dpe.Order)
@@ -227,7 +228,8 @@ public class WorkoutPlanActions(ApplicationDbContext context)
                             Name = dpe.Exercise.Name,
                             MuscleGroup = dpe.Exercise.MuscleGroup,
                             GifUrl = dpe.Exercise.GifUrl,
-                            Instructions = dpe.Exercise.Instructions
+                            Instructions = dpe.Exercise.Instructions,
+                            MetValue = dpe.Exercise.MetValue
                         },
                         PauseTime = dpe.PauseTime is null
                             ? new PauseTimeDto { Minutes = 2, Seconds = 0 }

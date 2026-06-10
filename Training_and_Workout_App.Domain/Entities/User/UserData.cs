@@ -53,4 +53,6 @@ public class UserData
 
     // one-to-many cu UserPlanFavorite (planuri favorite)
     public ICollection<UserPlanFavoriteData> PlanFavorites { get; set; } = [];
+
+    public ICollection<UserWeightHistoryData> WeightHistory { get; set; } = [];
 }

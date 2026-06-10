@@ -19,4 +19,6 @@ public class ExerciseCreateDto
     [StringLength(2000, MinimumLength = 1)]
     public string Instructions { get; set; } = string.Empty;
 
+    [Range(1.0, 20.0)]
+    public double MetValue { get; set; } = 5.0;
 }
