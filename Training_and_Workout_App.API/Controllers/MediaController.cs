@@ -25,7 +25,7 @@ public class MediaController(IWebHostEnvironment environment) : AppControllerBas
 
     [HttpPost("images")]
     [RequestSizeLimit(5 * 1024 * 1024)]
-    public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromQuery] string folder)
+    public async Task<IActionResult> UploadImage(IFormFile file, [FromQuery] string folder)
     {
         if (file.Length == 0)
         {

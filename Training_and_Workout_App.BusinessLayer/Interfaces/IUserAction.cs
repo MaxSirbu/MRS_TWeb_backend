@@ -8,7 +8,7 @@ public interface IUserAction
     Task<AuthResponseDto> LoginAsync(UserLoginDto dto);          // returneaza token JWT
     Task<UserResponseDto?> GetUserByIdAsync(int id);
     Task<UserResponseDto?> GetMeAsync(int userId);              // date proprii din token
-    Task<UserResponseDto?> UpdateMeAsync(int userId, UserUpdateDto dto); // update fullName/username
+    Task<UserResponseDto?> UpdateMeAsync(int userId, UserUpdateDto dto); // update fullName/email
     // ── Admin ──────────────────────────────────────────────────────────────────
     Task<List<UserAdminResponseDto>> GetAllAsync();             // toți userii
     Task<UserAdminResponseDto?> SetRoleAsync(int id, SetRoleDto dto);

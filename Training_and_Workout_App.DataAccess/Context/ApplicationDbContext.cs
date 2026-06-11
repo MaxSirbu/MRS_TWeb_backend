@@ -56,8 +56,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasKey(u => u.Id);
             entity.Property(u => u.FullName).IsRequired().HasMaxLength(100);
             entity.Property(u => u.Password).IsRequired().HasMaxLength(256);
-            entity.Property(u => u.Username).IsRequired().HasMaxLength(256);
-            entity.HasIndex(u => u.Username).IsUnique();
+            entity.Property(u => u.Email).IsRequired().HasMaxLength(256);
+            entity.HasIndex(u => u.Email).IsUnique();
             entity.Property(u => u.Role).HasConversion<string>().HasMaxLength(20);
         });
 

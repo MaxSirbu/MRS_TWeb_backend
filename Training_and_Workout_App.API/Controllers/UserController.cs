@@ -20,14 +20,21 @@ public class UserController(IUserAction userActions) : AppControllerBase
         return Ok(result);
     }
 
-    // PUT /api/user/me — actualizare date proprii (fullName, username)
+    // PUT /api/user/me - actualizare date proprii (fullName, email)
     [HttpPut("me")]
     public async Task<IActionResult> UpdateMe([FromBody] UserUpdateDto dto)
     {
-        var userId = GetCurrentUserId();
-        var result = await userActions.UpdateMeAsync(userId, dto);
-        if (result is null) return NotFound();
-        return Ok(result);
+        try
+        {
+            var userId = GetCurrentUserId();
+            var result = await userActions.UpdateMeAsync(userId, dto);
+            if (result is null) return NotFound();
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
     }
 
     // GET /api/user/{id} — doar Admin poate vedea datele oricarui user

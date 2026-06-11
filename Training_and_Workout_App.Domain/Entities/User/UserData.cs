@@ -16,8 +16,9 @@ public class UserData
     public string FullName { get; set; } = string.Empty;
 
     [Required]
-    [StringLength(256, MinimumLength = 3)]
-    public string Username { get; set; } = string.Empty; // email/username unic
+    [EmailAddress]
+    [StringLength(256)]
+    public string Email { get; set; } = string.Empty;
 
     [Required]
     [StringLength(256, MinimumLength = 8)]

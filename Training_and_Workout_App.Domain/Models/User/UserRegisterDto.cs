@@ -11,7 +11,7 @@ public class UserRegisterDto
     [Required]
     [EmailAddress]
     [StringLength(256)]
-    public string Username { get; set; } = string.Empty;   // email unic
+    public string Email { get; set; } = string.Empty;
 
     [Required]
     [StringLength(256, MinimumLength = 8)]
