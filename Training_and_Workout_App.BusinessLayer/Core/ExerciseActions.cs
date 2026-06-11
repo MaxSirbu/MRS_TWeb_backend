@@ -17,7 +17,8 @@ public class ExerciseActions(ApplicationDbContext context)
                 Name = e.Name,
                 MuscleGroup = e.MuscleGroup,
                 GifUrl = e.GifUrl,
-                Instructions = e.Instructions
+                Instructions = e.Instructions,
+                MetValue = e.MetValue
             })
             .ToListAsync();
     }
@@ -32,7 +33,8 @@ public class ExerciseActions(ApplicationDbContext context)
                 Name = e.Name,
                 MuscleGroup = e.MuscleGroup,
                 GifUrl = e.GifUrl,
-                Instructions = e.Instructions
+                Instructions = e.Instructions,
+                MetValue = e.MetValue
             })
             .ToListAsync();
     }
@@ -48,7 +50,8 @@ public class ExerciseActions(ApplicationDbContext context)
             Name = e.Name,
             MuscleGroup = e.MuscleGroup,
             GifUrl = e.GifUrl,
-            Instructions = e.Instructions
+            Instructions = e.Instructions,
+            MetValue = e.MetValue
         };
     }
 
@@ -64,6 +67,7 @@ public class ExerciseActions(ApplicationDbContext context)
             hiddenExercise.MuscleGroup = dto.MuscleGroup;
             hiddenExercise.GifUrl = (dto.GifUrl ?? string.Empty).Trim();
             hiddenExercise.Instructions = dto.Instructions.Trim();
+            hiddenExercise.MetValue = dto.MetValue;
             hiddenExercise.Hidden = false;
 
             await context.SaveChangesAsync();
@@ -74,7 +78,8 @@ public class ExerciseActions(ApplicationDbContext context)
                 Name = hiddenExercise.Name,
                 MuscleGroup = hiddenExercise.MuscleGroup,
                 GifUrl = hiddenExercise.GifUrl,
-                Instructions = hiddenExercise.Instructions
+                Instructions = hiddenExercise.Instructions,
+                MetValue = hiddenExercise.MetValue
             };
         }
 
@@ -84,6 +89,7 @@ public class ExerciseActions(ApplicationDbContext context)
             MuscleGroup = dto.MuscleGroup,
             GifUrl = (dto.GifUrl ?? string.Empty).Trim(),
             Instructions = dto.Instructions.Trim(),
+            MetValue = dto.MetValue,
             Hidden = false
         };
 
@@ -96,7 +102,8 @@ public class ExerciseActions(ApplicationDbContext context)
             Name = exercise.Name,
             MuscleGroup = exercise.MuscleGroup,
             GifUrl = exercise.GifUrl,
-            Instructions = exercise.Instructions
+            Instructions = exercise.Instructions,
+            MetValue = exercise.MetValue
         };
     }
 
@@ -109,6 +116,7 @@ public class ExerciseActions(ApplicationDbContext context)
         exercise.MuscleGroup = dto.MuscleGroup;
         exercise.GifUrl = (dto.GifUrl ?? string.Empty).Trim();
         exercise.Instructions = dto.Instructions.Trim();
+        exercise.MetValue = dto.MetValue;
 
         await context.SaveChangesAsync();
 
@@ -118,7 +126,8 @@ public class ExerciseActions(ApplicationDbContext context)
             Name = exercise.Name,
             MuscleGroup = exercise.MuscleGroup,
             GifUrl = exercise.GifUrl,
-            Instructions = exercise.Instructions
+            Instructions = exercise.Instructions,
+            MetValue = exercise.MetValue
         };
     }
 

@@ -22,10 +22,17 @@ public class UserController(IUserAction userActions) : AppControllerBase
     [HttpPut("me")]
     public async Task<IActionResult> UpdateMe([FromBody] UserUpdateDto dto)
     {
-        var userId = GetCurrentUserId();
-        var result = await userActions.UpdateMeAsync(userId, dto);
-        if (result is null) return NotFound();
-        return Ok(result);
+        try
+        {
+            var userId = GetCurrentUserId();
+            var result = await userActions.UpdateMeAsync(userId, dto);
+            if (result is null) return NotFound();
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
     }
 
     [HttpGet("{id:int}")]

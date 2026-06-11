@@ -41,9 +41,12 @@ public class AuthController(IUserAction userActions) : ControllerBase
             var result = await userActions.LoginAsync(dto);
             return Ok(result);
         }
-        catch (UnauthorizedAccessException)
+        catch (UnauthorizedAccessException ex)
         {
-            return Unauthorized(new { message = "Invalid email or password." });
+            var message = ex.Message == "Account blocked"
+                ? "This account is blocked. Contact an administrator."
+                : "Invalid email or password.";
+            return Unauthorized(new { message });
         }
         catch (Exception ex)
         {

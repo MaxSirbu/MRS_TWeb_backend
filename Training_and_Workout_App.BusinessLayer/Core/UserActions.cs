@@ -14,30 +14,47 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
 
     public async Task<UserResponseDto> RegisterAsync(UserRegisterDto dto)
     {
+        var normalizedEmail = NormalizeEmail(dto.Email);
+        var emailExists = await context.Users
+            .AnyAsync(user => user.Email.ToLower() == normalizedEmail);
+
+        if (emailExists)
+            throw new InvalidOperationException("An account with this email already exists.");
+
         var user = new UserData
         {
-            FullName = dto.FullName,
-            Username = dto.Username,
+            FullName = dto.FullName.Trim(),
+            Email = normalizedEmail,
         };
         user.Password = _hasher.HashPassword(user, dto.Password);
 
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
+        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Email = user.Email };
     }
 
     public async Task<AuthResponseDto> LoginAsync(UserLoginDto dto)
     {
+        var normalizedEmail = NormalizeEmail(dto.Email);
         var user = await context.Users
-            .FirstOrDefaultAsync(u => u.Username == dto.Username);
+            .FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
 
         if (user is null)
             throw new UnauthorizedAccessException("Invalid credentials");
 
+        if (user.Blocked)
+            throw new UnauthorizedAccessException("Account blocked");
+
         var verification = _hasher.VerifyHashedPassword(user, user.Password, dto.Password);
         if (verification == PasswordVerificationResult.Failed)
             throw new UnauthorizedAccessException("Invalid credentials");
+
+        if (verification == PasswordVerificationResult.SuccessRehashNeeded)
+        {
+            user.Password = _hasher.HashPassword(user, dto.Password);
+            await context.SaveChangesAsync();
+        }
 
         var expireMinutes = int.Parse(configuration["Jwt:ExpireMinutes"] ?? "60");
         var token = tokenActions.GenerateToken(user.Id, user.FullName, user.Role.ToString());
@@ -46,6 +63,7 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         {
             UserId = user.Id,
             FullName = user.FullName,
+            Email = user.Email,
             Role = user.Role.ToString(),
             Token = token,
             ExpiresAt = DateTime.UtcNow.AddMinutes(expireMinutes)
@@ -57,7 +75,7 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         var user = await context.Users.FindAsync(id);
         if (user is null) return null;
 
-        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
+        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Email = user.Email };
     }
 
     public async Task<UserResponseDto?> GetMeAsync(int userId)
@@ -65,7 +83,7 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         var user = await context.Users.FindAsync(userId);
         if (user is null) return null;
 
-        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
+        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Email = user.Email };
     }
 
     public async Task<UserResponseDto?> UpdateMeAsync(int userId, UserUpdateDto dto)
@@ -75,11 +93,19 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
 
         if (!string.IsNullOrWhiteSpace(dto.FullName))
             user.FullName = dto.FullName.Trim();
-        if (!string.IsNullOrWhiteSpace(dto.Username))
-            user.Username = dto.Username.Trim();
+        if (!string.IsNullOrWhiteSpace(dto.Email))
+        {
+            var normalizedEmail = NormalizeEmail(dto.Email);
+            var emailExists = await context.Users.AnyAsync(existing =>
+                existing.Id != userId && existing.Email.ToLower() == normalizedEmail);
+            if (emailExists)
+                throw new InvalidOperationException("An account with this email already exists.");
+
+            user.Email = normalizedEmail;
+        }
 
         await context.SaveChangesAsync();
-        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Username = user.Username };
+        return new UserResponseDto { Id = user.Id, FullName = user.FullName, Email = user.Email };
     }
 
     public async Task<List<UserAdminResponseDto>> GetAllAsync()
@@ -90,7 +116,7 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
             {
                 Id = u.Id,
                 FullName = u.FullName,
-                Username = u.Username,
+                Email = u.Email,
                 Role = u.Role.ToString(),
                 Blocked = u.Blocked,
             })
@@ -110,7 +136,7 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         {
             Id = user.Id,
             FullName = user.FullName,
-            Username = user.Username,
+            Email = user.Email,
             Role = user.Role.ToString(),
             Blocked = user.Blocked,
         };
@@ -127,7 +153,7 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         {
             Id = user.Id,
             FullName = user.FullName,
-            Username = user.Username,
+            Email = user.Email,
             Role = user.Role.ToString(),
             Blocked = user.Blocked,
         };
@@ -142,4 +168,7 @@ public class UserActions(ApplicationDbContext context, ITokenAction tokenActions
         await context.SaveChangesAsync();
         return true;
     }
+
+    private static string NormalizeEmail(string email) =>
+        email.Trim().ToLowerInvariant();
 }

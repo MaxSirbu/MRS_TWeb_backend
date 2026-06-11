@@ -29,10 +29,26 @@ public class UserProfileActions(ApplicationDbContext context)
         };
     }
 
+    public async Task<List<UserWeightHistoryDto>> GetWeightHistoryAsync(int userId)
+    {
+        return await context.UserWeightHistory
+            .Where(entry => entry.UserId == userId)
+            .OrderBy(entry => entry.RecordedAt)
+            .Select(entry => new UserWeightHistoryDto
+            {
+                Id = entry.Id,
+                Weight = entry.Weight,
+                RecordedAt = entry.RecordedAt
+            })
+            .ToListAsync();
+    }
+
     public async Task<UserProfileDto> UpsertAsync(int userId, UserProfileDto dto)
     {
         var existing = await context.UserProfiles
             .FirstOrDefaultAsync(up => up.UserId == userId);
+        var shouldRecordWeight = dto.Weight > 0 &&
+            (existing is null || Math.Abs(existing.Weight - dto.Weight) >= 0.01);
 
         if (existing is not null)
         {
@@ -63,6 +79,16 @@ public class UserProfileActions(ApplicationDbContext context)
                 LastActiveDate = dto.LastActiveDate,
                 AvatarUrl = dto.AvatarUrl ?? string.Empty,
                 UserId = userId
+            });
+        }
+
+        if (shouldRecordWeight)
+        {
+            context.UserWeightHistory.Add(new UserWeightHistoryData
+            {
+                UserId = userId,
+                Weight = dto.Weight,
+                RecordedAt = DateTime.UtcNow
             });
         }
 

@@ -9,4 +9,5 @@ public class ExerciseResponseDto
     public MuscleGroup MuscleGroup { get; set; }
     public string GifUrl { get; set; } = string.Empty;
     public string Instructions { get; set; } = string.Empty;
+    public double MetValue { get; set; }
 }

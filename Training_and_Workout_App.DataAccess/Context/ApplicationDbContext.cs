@@ -38,6 +38,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<QuestionnaireEntryData> QuestionnaireEntries => Set<QuestionnaireEntryData>();
     public DbSet<FoodItemData> FoodItems => Set<FoodItemData>();
     public DbSet<UserProfileData> UserProfiles => Set<UserProfileData>();
+    public DbSet<UserWeightHistoryData> UserWeightHistory => Set<UserWeightHistoryData>();
     public DbSet<PlanActivationData> PlanActivations => Set<PlanActivationData>();
     public DbSet<PlanCompletionData> PlanCompletions => Set<PlanCompletionData>();
     public DbSet<PlanCustomizationData> PlanCustomizations => Set<PlanCustomizationData>();
@@ -54,8 +55,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasKey(u => u.Id);
             entity.Property(u => u.FullName).IsRequired().HasMaxLength(100);
             entity.Property(u => u.Password).IsRequired().HasMaxLength(256);
-            entity.Property(u => u.Username).IsRequired().HasMaxLength(256);
-            entity.HasIndex(u => u.Username).IsUnique();
+            entity.Property(u => u.Email).IsRequired().HasMaxLength(256);
+            entity.HasIndex(u => u.Email).IsUnique();
             entity.Property(u => u.Role).HasConversion<string>().HasMaxLength(20);
         });
 
@@ -66,6 +67,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(e => e.GifUrl).IsRequired().HasMaxLength(500);
             entity.Property(e => e.Instructions).IsRequired().HasMaxLength(2000);
             entity.Property(e => e.MuscleGroup).HasConversion<string>().HasMaxLength(20);
+            entity.Property(e => e.MetValue).HasDefaultValue(5.0);
         });
 
         modelBuilder.Entity<WorkoutPlanData>(entity =>
@@ -372,6 +374,18 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasOne(up => up.User)
                   .WithOne(u => u.UserProfile)
                   .HasForeignKey<UserProfileData>(up => up.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<UserWeightHistoryData>(entity =>
+        {
+            entity.HasKey(entry => entry.Id);
+            entity.Property(entry => entry.RecordedAt).IsRequired();
+            entity.HasIndex(entry => new { entry.UserId, entry.RecordedAt });
+
+            entity.HasOne(entry => entry.User)
+                  .WithMany(user => user.WeightHistory)
+                  .HasForeignKey(entry => entry.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
 

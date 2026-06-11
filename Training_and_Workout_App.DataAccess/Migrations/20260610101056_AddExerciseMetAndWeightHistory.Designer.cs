@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Training_and_Workout_App.DataAccess.Context;
 
@@ -11,9 +12,11 @@ using Training_and_Workout_App.DataAccess.Context;
 namespace Training_and_Workout_App.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260610101056_AddExerciseMetAndWeightHistory")]
+    partial class AddExerciseMetAndWeightHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -682,7 +685,7 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                         {
                             Id = 6,
                             Options = "[]",
-                            Subtitle = "Tell us the basics so we can tailor your plans.",
+                            Subtitle = "Enter your data for BMI, BMR, TDEE, and nutrition calculations.",
                             Title = "Personal Information"
                         },
                         new
@@ -758,11 +761,6 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                     b.Property<bool>("Blocked")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -778,9 +776,14 @@ namespace Training_and_Workout_App.DataAccess.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
+                    b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Users");

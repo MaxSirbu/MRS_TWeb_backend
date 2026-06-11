@@ -16,8 +16,9 @@ public class UserData
     public string FullName { get; set; } = string.Empty;
 
     [Required]
-    [StringLength(256, MinimumLength = 3)]
-    public string Username { get; set; } = string.Empty; // email/username unic
+    [EmailAddress]
+    [StringLength(256)]
+    public string Email { get; set; } = string.Empty;
 
     [Required]
     [StringLength(256, MinimumLength = 8)]
@@ -53,4 +54,6 @@ public class UserData
 
     // one-to-many cu UserPlanFavorite (planuri favorite)
     public ICollection<UserPlanFavoriteData> PlanFavorites { get; set; } = [];
+
+    public ICollection<UserWeightHistoryData> WeightHistory { get; set; } = [];
 }
