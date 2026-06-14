@@ -1,0 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace Training_and_Workout_App.Domain.Entities.Plans;
+
+public class MealPlanDayData
+{
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    [StringLength(50, MinimumLength = 1)]
+    public string Label { get; set; } = string.Empty;
+
+    [Range(1, 365)]
+    public int DayNumber { get; set; }
+
+    public int MealPlanId { get; set; }
+    public MealPlanData MealPlan { get; set; } = null!;
+
+    public ICollection<MealCategoryData> Categories { get; set; } = [];
+}

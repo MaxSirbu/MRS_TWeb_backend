@@ -1,3 +1,0 @@
-﻿namespace Training_and_Workout_App.BusinessLayer;
-
-public static class BusinessLayerAssemblyReference;

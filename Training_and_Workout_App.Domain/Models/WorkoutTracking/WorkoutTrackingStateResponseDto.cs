@@ -1,0 +1,8 @@
+namespace Training_and_Workout_App.Domain.Models.WorkoutTracking;
+
+public class WorkoutTrackingStateResponseDto
+{
+    public int Id { get; set; }
+    public PauseTimeDto PauseTime { get; set; } = new PauseTimeDto();
+    public List<WorkoutSetDto> Sets { get; set; } = [];
+}
