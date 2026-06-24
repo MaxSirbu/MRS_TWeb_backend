@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Training_and_Workout_App.Domain.Entities.User;
 
 namespace Training_and_Workout_App.Domain.Entities;
 
@@ -11,7 +12,7 @@ public class TimerSession
     public int UserId { get; set; }
 
     // FK -> User
-    public User User { get; set; } = null!;
+    public UserData User { get; set; } = null!;
 
     [Required]
     [Range(1, 86400)] // 1 second to 24 hours

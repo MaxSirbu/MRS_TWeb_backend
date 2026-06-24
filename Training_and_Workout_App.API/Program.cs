@@ -1,12 +1,16 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Training_and_Workout_App.BusinessLayer.Core;
 using Training_and_Workout_App.BusinessLayer.Interfaces;
 using Training_and_Workout_App.BusinessLayer.Structure;
+using Training_and_Workout_App.DataAccess.Context;
 using Training_and_Workout_App.DataAccess.Extensions;
+using Training_and_Workout_App.Domain.Entities.User;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -118,6 +122,44 @@ builder.Services.AddScoped<IFaqAction, FaqActionExecution>();
 
 var app = builder.Build();
 var isDevelopment = app.Environment.IsDevelopment();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await dbContext.Database.EnsureCreatedAsync();
+
+    var hasher = new PasswordHasher<UserData>();
+
+    var adminEmail = (builder.Configuration["SeedAdmin:Email"] ?? "admin@example.com").Trim().ToLowerInvariant();
+    var adminPassword = builder.Configuration["SeedAdmin:Password"] ?? "Admin123!";
+
+    var hasAnyAdmin = await dbContext.Users.AnyAsync(u => u.Role == UserRole.Admin);
+    var existingAdminUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == adminEmail);
+
+    if (!hasAnyAdmin)
+    {
+        if (existingAdminUser is null)
+        {
+            var adminUser = new UserData
+            {
+                FullName = "Administrator",
+                Email = adminEmail,
+                Role = UserRole.Admin,
+            };
+            adminUser.Password = hasher.HashPassword(adminUser, adminPassword);
+            dbContext.Users.Add(adminUser);
+        }
+        else
+        {
+            existingAdminUser.FullName = "Administrator";
+            existingAdminUser.Role = UserRole.Admin;
+            existingAdminUser.Password = hasher.HashPassword(existingAdminUser, adminPassword);
+        }
+
+        await dbContext.SaveChangesAsync();
+        Console.WriteLine($"Seeded admin user: {adminEmail} / {adminPassword}");
+    }
+}
 
 if (isDevelopment)
 {

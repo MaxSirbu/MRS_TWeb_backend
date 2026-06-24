@@ -149,7 +149,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasOne(ws => ws.DayPlanExercise)
                   .WithMany(dpe => dpe.Sets)
                   .HasForeignKey(ws => new { ws.DayPlanId, ws.ExerciseId })
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(ws => ws.Order).HasDefaultValue(0);
         });
@@ -160,6 +160,46 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasIndex(pt => new { pt.DayPlanId, pt.ExerciseId })
                   .IsUnique()
                   .HasFilter("[DayPlanId] IS NOT NULL AND [ExerciseId] IS NOT NULL");
+        });
+
+        modelBuilder.Entity<WorkoutCompletionData>(entity =>
+        {
+            entity.HasKey(wc => wc.Id);
+
+            entity.HasOne(wc => wc.User)
+                  .WithMany()
+                  .HasForeignKey(wc => wc.UserId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(wc => wc.WorkoutPlan)
+                  .WithMany()
+                  .HasForeignKey(wc => wc.WorkoutPlanId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(wc => wc.WorkoutDay)
+                  .WithMany()
+                  .HasForeignKey(wc => wc.WorkoutDayId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<WorkoutCompletionExerciseData>(entity =>
+        {
+            entity.HasKey(wce => wce.Id);
+
+            entity.HasOne(wce => wce.WorkoutCompletion)
+                  .WithMany(wc => wc.Exercises)
+                  .HasForeignKey(wce => wce.WorkoutCompletionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<WorkoutCompletionSetData>(entity =>
+        {
+            entity.HasKey(wcs => wcs.Id);
+
+            entity.HasOne(wcs => wcs.WorkoutCompletionExercise)
+                  .WithMany(wce => wce.Sets)
+                  .HasForeignKey(wcs => wcs.WorkoutCompletionExerciseId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<MealPlanData>(entity =>
